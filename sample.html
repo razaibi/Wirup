@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wirup</title>
+    <link rel="stylesheet" href="css/main.css" asp-append-version="true" />
+</head>
+
+<body>
+    <div class="progress_bar_holder">
+                <div class="progress_bar" id="progress_bar"></div>
+    </div>
+    <div class="content_holder" id="contentHeader">
+        <div class="top_bar">
+            <div class="top_bar_content">
+                <div class="top_bar_logo_holder top_bar_side centralize">
+                    <img src="img/aero_logo.png" class="top_bar_logo" /> </div>
+                <div class="top_bar_search_box_holder top_bar_side centralize">
+                    <input type="text" placeholder="What are you looking for?" class="search_box" /> </div>
+                <div class="top_bar_notif_holder top_bar_side centralize">
+                    <label for="gen_notif">
+                        <img src="img/notification_sm.png" class="top_bar_icon" />
+                    </label>
+                    <input type="checkbox" id="gen_notif" role="button">
+                    <div class="gen_notif">
+                        <computerBox></computerBox>
+                    </div>
+                </div>
+                <div class="top_bar_notif_holder top_bar_side centralize">
+                    <label for="message_notif">
+                        <img src="img/message_sm.png" class="top_bar_icon" />
+                    </label>
+                    <input type="checkbox" id="message_notif" role="button">
+                    <div class="message_notif">
+                        <ul class="notif_holder glide_left">
+                            <li>
+                                <p class="notif_title">Sunita Williams</p>
+                                <p class="notif_time">Today</p>
+                                <p class="notif_desc">Hi from space</p>
+                            </li>
+                            <li>
+                                <p class="notif_title">Petkov</p>
+                                <p class="notif_time">Yesterday</p>
+                                <p class="notif_desc">Hello from the moon</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="top_bar_notif_holder top_bar_side centralize">
+                    <img src="img/user.png" class="top_bar_icon" /> </div>
+            </div>
+        </div>
+        <div class="menu_bar">
+            <label for="menu_link" class="menu_link">
+                <img src="img/list_menu.png" />
+            </label>
+            <input type="checkbox" id="menu_link" role="button">
+            <ul class="menu_holder">
+                <li> Nav
+                    <div class="menu_li_content">
+                        <a href="#/newsPage">News Page</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content_holder" id="contentBody">
+        
+
+    </div>
+
+
+</body>
+<script type="text/javascript" src="js/Wirup.js"></script>
+<script type="text/javascript">
+    //Replace attributes also like href 
+    //Check arrays
+
+
+    var computers = '{"computers":[{"id":5,"name":"Amazon","city":"Chicago","state":"IL","url":"https://basecamp.com/"},{"id":17,"name":"Google","city":"Mountain View","state":"CA","url":"http://google.com/"}]}';
+    var cars = '{"cars": [{"name": "Ford","models": ["Fiesta", "Focus", "Mustang"],"price": 56},{"name": "BMW","models": ["320", "X3", "X5"],"price": 44},{"name": "Fiat","models": ["500", "Panda"], "price": 33}]}';
+
+    var news = '{"news":[{"id":5,"headline":"Quantum Computers are Here!!","content":"Paradigm shift in the way we solves problems."},{"id":17,"headline":"Mars Rover Landed","content":"Huge step for mankind"}]}';
+    
+    wuObject.init();
+
+
+
+
+</script>
+
+</html>

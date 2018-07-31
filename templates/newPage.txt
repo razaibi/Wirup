@@ -1,0 +1,5 @@
+<newsBox></newsBox>
+
+
+<computerBox></computerBox>
+
