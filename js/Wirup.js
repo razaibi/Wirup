@@ -1,23 +1,26 @@
-﻿"use strict";
+"use strict";
 var wirup = function(){};
 wirup.prototype  = function(){
     var _getElement = function(element_id){
         return document.getElementById(element_id);
     },
-    _wirex = function(callType, url, contentType, callback){
+    _wijax = function(callType, url, contentType, callback){
         var httpRequest = new XMLHttpRequest();
         httpRequest.open(callType, url,true);
         httpRequest.setRequestHeader("Content-Type", contentType);
+        httpRequest.setRequestHeader('cache-control', 'max-age=0');
+        httpRequest.setRequestHeader('expires', '0');
+        httpRequest.setRequestHeader('expires', 'Tue, 01 Jan 1980 1:00:00 GMT');
+        httpRequest.setRequestHeader('pragma', 'no-cache');
         httpRequest.onload = callback;
         httpRequest.send();
         return httpRequest.responseText;
-        
     },
     _routes = {},
     _viewTemplates,
     _appLocation = window.location.hash.split("#")[1],
     _registerTemplates = function(){
-      _wirex("GET","templates/templates.json", "application/json; charset=UTF-8", _getTemplates);
+      _wijax("GET","templates/templates.json", "application/json; charset=UTF-8", _getTemplates);
     },
     _templateHolder = '',
     _setTemplateHolder = function(templateHolderId){
@@ -32,6 +35,7 @@ wirup.prototype  = function(){
         if(_appLocation === undefined){
             window.location = "/#/";
         }
+       
         for(var i=0;i<=_viewTemplates.length-1;i++){
             
             if(_viewTemplates[i]['url']==_url){
@@ -41,7 +45,7 @@ wirup.prototype  = function(){
         _fillTemplate(_index, target);
     },
     _fillTemplate = function(index, target){
-        _wirex("GET","templates/" + _viewTemplates[index]['HTML'],"text/plain; charset=UTF-8", function(){
+        _wijax("GET","templates/" + _viewTemplates[index]['HTML'],"text/plain; charset=UTF-8", function(){
             _getElement(target).innerHTML = this.responseText;
         });
     },
@@ -71,7 +75,6 @@ wirup.prototype  = function(){
         var _templateComponents;
         for(var i=0;i<=_components.length-1;i++){
             _templateComponents = document.getElementsByTagName(_components[i]['componentName']);
-            
             for(var z=0;z<=_templateComponents.length-1;z++){
                 if (_templateComponents[z] != undefined && _templateComponents[z] != null){
                     _templateComponents[z].innerHTML = _components[i]['HTML'];
@@ -80,15 +83,16 @@ wirup.prototype  = function(){
             
         }
     },
-    _getDataObject = function(){
-        return _dataObject;
-    },
-    _getDataListType = function(object){
-        return typeof(_getDataObject());
+    _getDataObjectType = function(dataObject){
+        if(Array.isArray(dataObject)){
+            return "array"
+        }else{
+            return typeof(dataObject);
+        }
+        
     },
     _baseDataTemplates = [],
     _dataModels = [],
-    _dataObject =null,
     _setBaseDataTemplate = function(templateName,templateHTML){
         var _found=false;
         for(var i=0;i <= _baseDataTemplates.length-1;i++){
@@ -130,58 +134,102 @@ wirup.prototype  = function(){
                 }
                 if(_dataSnapShotList[i]!=JSON.stringify(window[_dataModels[i]['dataModelName']])){
                     _dataSnapShotList[i] = JSON.stringify(window[_dataModels[i]['dataModelName']])
-                    _bindDataList();
+                    _bindData();
                 }
             }
         }, 500); 
     },
-    _bindDataList = function(){
+    _bindData = function(){
         _runPreloader();
         
-        var _elements_list = document.querySelectorAll('[data-list]');
+        var _dataListElements = document.querySelectorAll('[data-list]');
         var _subElementsArray = [];       
         var _temporaryElement;
-        for (var i =0; i<= _elements_list.length-1;i++){
-            var _dataObjectName = _elements_list[i].getAttribute("data-list");
-            _temporaryElement = document.createElement(_elements_list[i].tagName);
-            _temporaryElement.className = _elements_list[i].className;
+        for (var i =0; i<= _dataListElements.length-1;i++){
+            var _dataObjectName = _dataListElements[i].getAttribute("data-list");
+            _temporaryElement = document.createElement(_dataListElements[i].tagName);
+            
             _setDataModel(_dataModels,_dataObjectName, window[_dataObjectName]);
-            _setBaseDataTemplate(_dataObjectName,_elements_list[i]);
-            if(_getDataListType(_dataObjectName)=="Array"){
-            }else{
-                _subElementsArray = _renderJsonDataList(_dataObjectName, _elements_list[i]);
-                for (var z =0; z<= _subElementsArray.length-1;z++){
-                    _temporaryElement.appendChild(_subElementsArray[z]);
-                }
+            _setBaseDataTemplate(_dataObjectName,_dataListElements[i]);
+            
+            _subElementsArray = _renderGeneralDataList(_dataObjectName, _dataListElements[i]);
+            
+            for (var z =0; z<= _subElementsArray.length-1;z++){
+                _temporaryElement.appendChild(_subElementsArray[z]);
             }
-            _temporaryElement.setAttribute('data-list',_dataObjectName);
-            _elements_list[i].parentNode.replaceChild(_temporaryElement,_elements_list[i]);
+
+            _temporaryElement = _reassignAttributes(_dataListElements[i],_temporaryElement);
+            _dataListElements[i].parentNode.replaceChild(_temporaryElement,_dataListElements[i]);
         }
     },
-    _renderJsonDataList = function(dataObjectName, htmlElement){
-        if(typeof(window[dataObjectName])=="string"){
-            var _jsonizedDataObject = _jsonize(dataObjectName);
-        }else{
-            var _jsonizedDataObject = window[dataObjectName];
+    _reassignAttributes = function(sourceNode, targetNode){
+        var _attributeKeys = sourceNode.attributes;
+        for(var i = _attributeKeys.length - 1; i >= 0; i--) {
+            targetNode.setAttribute(_attributeKeys[i].name,_attributeKeys[i].value)
         }
-        window[dataObjectName] = _jsonizedDataObject;
+        return targetNode;
+    },
+    _renderGeneralDataList = function(dataObjectName,htmlElement){
+        var _localDataObject = _getParseableDataObject(dataObjectName);
+        window[dataObjectName] = _localDataObject;
         var _templateHtml=_getBaseDataTemplateHTML(dataObjectName);
-        var _processedNode;
         var _subElementsArray = [];
         var _templateElement = document.createElement(_templateHtml.tagName);
         _templateElement.className = _templateHtml.className;
-        for (var x=0; x<=_jsonizedDataObject[dataObjectName].length-1;x++) {
-            var row = _jsonizedDataObject[dataObjectName][x];
-            _processedNode = _parseDataKeys(dataObjectName, row, x, _templateHtml.childNodes[1]);
-            _subElementsArray.push(_processedNode);
+        _subElementsArray = _buildSubElements(_localDataObject,dataObjectName, _templateHtml);
+        
+        return _subElementsArray;
+    },
+    _buildSubElements = function(dataObject,dataObjectName, templateHtml){
+        var _processedNode;
+        var _subElementsArray = [];
+        switch(_getDataObjectType(dataObject)){
+            case "object":
+                for (var x=0; x<=dataObject[dataObjectName].length-1;x++) {
+                    var row = dataObject[dataObjectName][x];
+                    _processedNode = _parseDataKeys(dataObjectName, row, x, templateHtml.childNodes[1]);
+                    _subElementsArray.push(_processedNode);
+                }
+                break;
+            case "array":
+                for (var x=0; x<=dataObject.length-1;x++) {
+                    _processedNode = _parseDataKeys(dataObjectName, null, x, templateHtml.childNodes[1]);
+                    _subElementsArray.push(_processedNode);
+                }
+                break;
+            default:
+                break;
         }
         return _subElementsArray;
+    },
+    _getParseableDataObject = function(dataObjectName){
+        var _parseableDataObject = null;
+        
+        switch(typeof(window[dataObjectName])){
+            case "string":
+                _parseableDataObject = _jsonize(dataObjectName);
+                break;
+            case "array":
+                _parseableDataObject = window[dataObjectName];
+                break;
+            default:
+                _parseableDataObject = window[dataObjectName];
+                break;
+        }
+        return _parseableDataObject;
     },
     _parseDataKeys = function(dataObjectName,row, rowIndex, htmlElement){
         var _searchedNode;
         var _newNode = htmlElement.cloneNode(true);
-        for (var key in row){
-            _searchedNode = _searchDataNodes(dataObjectName, row, rowIndex, _newNode,key);
+        
+        var _dataObjectType = _getDataObjectType(window[dataObjectName]);
+        switch (_dataObjectType){
+            case "object":
+                for (var key in row){
+                    _searchedNode = _searchDataNodes(dataObjectName, row, rowIndex, _newNode,key);
+                }
+            case "array":
+                _searchedNode = _searchDataNodes(dataObjectName,window[dataObjectName][rowIndex],rowIndex,_newNode,null);
         }
         return _searchedNode;
     },
@@ -191,7 +239,7 @@ wirup.prototype  = function(){
         characterData: true,
         characterDataOldValue:true
     },
-    _fixAttributes = function(node, key, value){
+    _bindAttributes = function(node, key, value){
         var _attributeKeys = node.attributes;
         for(var i = _attributeKeys.length - 1; i >= 0; i--) {
             var _attributeValue = _attributeKeys[i].value;
@@ -210,24 +258,45 @@ wirup.prototype  = function(){
                         recursor(child);
                     }else{
                         var str=child.nodeValue;
-                        if(str.indexOf('--' + key + '--')>-1){
-                            
-                            child.nodeValue=row[key];
-                            _fixAttributes(child.parentElement, key, row[key]);
-                            
-                            var _jsonizedDataObject = window[dataObjectName];
-                            var _mutationUICallback = function(mutationsList) {
-                                for(var i = 0; i < mutationsList.length; i++) {
-                                    //console.log(mutationsList[i]);
-                                    console.log(_jsonizedDataObject);
-                                    _jsonizedDataObject[dataObjectName][rowIndex][key] = child.nodeValue;
-                                    window[dataObjectName] = _jsonizedDataObject;
-                                    console.log(window[dataObjectName]);
+
+                        var _dataObjectType = _getDataObjectType(window[dataObjectName]);
+                        var _localDataObject = window[dataObjectName];
+                        switch (_dataObjectType){
+                            case "object":
+                                if(str.indexOf('--' + key + '--')>-1){
+                                    child.nodeValue=row[key];
+                                    _bindAttributes(child.parentElement, key, row[key]);
+                                    var _mutationUICallback = function(mutationsList) {
+                                        for(var i = 0; i < mutationsList.length; i++) {
+                                            _localDataObject[dataObjectName][rowIndex][key] = child.nodeValue;
+                                            window[dataObjectName] = _localDataObject;
+                                            console.log(window[dataObjectName]);
+                                        }
+                                    };
+                                    var userInterfaceObserver = new MutationObserver(_mutationUICallback);
+                                    userInterfaceObserver.observe(container, _mutationObserverConfig);
                                 }
-                            };
-                            var userInterfaceObserver = new MutationObserver(_mutationUICallback);
-                            userInterfaceObserver.observe(container, _mutationObserverConfig);
-                            };
+                                break;
+                            case "array":
+                                if(str.indexOf('--item--')>-1){
+                                    
+                                    child.nodeValue = window[dataObjectName][rowIndex];
+                                    _bindAttributes(child.parentElement, 'item', window[dataObjectName][rowIndex]);
+                                    var _mutationUICallback = function(mutationsList) {
+                                        for(var i = 0; i < mutationsList.length; i++) {
+                                            _localDataObject[rowIndex] = child.nodeValue;
+                                            
+                                            
+                                            window[dataObjectName] = _localDataObject;
+                                            console.log(window[dataObjectName]);
+                                        }
+                                    };
+                                    var userInterfaceObserver = new MutationObserver(_mutationUICallback);
+                                    userInterfaceObserver.observe(container, _mutationObserverConfig);
+                                   
+                                }
+                                break;
+                            }
                         };
                 };
         };
@@ -275,21 +344,25 @@ wirup.prototype  = function(){
     _init = function(){
 
         _registerTemplates();
-        setTimeout(function(){ _getTemplate('contentBody'); }, 1000);
+        setTimeout(function(){ _getTemplate('contentBody'); }, 500);
         
         setTimeout(function(){ 
             _renderComponents();
-        },2000);
+        },1000);
         
         setTimeout(function(){ 
-            _bindDataList();
+            _bindData();
             _watchDataModel();
-        },3000);
+        },1500);
         _bindRouter();
         _loadScript('components/components.js');
     };
 
     return{
+        wu:_getElement,
+        wijax:_wijax,
+        jsonize:_jsonize,
+        bindData:_bindData,
         loadScript:_loadScript,
         setTemplateHolder:_setTemplateHolder,
         registerComponent : _registerComponent,
