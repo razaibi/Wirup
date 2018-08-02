@@ -35,3 +35,38 @@ wuObject.registerComponent({
 
 </div>`
 });
+
+
+wuObject.registerComponent({
+        "componentName": "randomBox",
+        "HTML": `<div class="panel">
+                <div class="row">
+                        <h2 class="light_title">Big News from YYZ</h2>
+                        <p>Visit your office now.</p>
+                        
+                </div>
+    
+    </div>`
+});
+
+wuObject.registerComponent({
+        "componentName": "scoreBox",
+        "HTML": `<div class="panel">
+                <div class="row">
+                        <h2 class="light_title">Score is 101</h2>
+                        <p>Click to see full scoreboard.</p>
+                        
+                </div>
+    
+    </div>`
+});
+
+wuObject.registerComponent({
+        "componentName": "arrayBox",
+        "HTML": `<div class="panel" data-list="arrayList">
+                <div class="row">
+                        <p>--item--</p>                       
+                </div>
+    
+    </div>`
+});
