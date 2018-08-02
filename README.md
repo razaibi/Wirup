@@ -54,6 +54,14 @@ var computers = {
 }
 ```
 
+Alternatively you could use arrays to feed your UI.
+
+###### Below is an example of how your arrays could look like.
+
+```js
+var arrayList =["Azure",'AWS','Google Cloud'];
+```
+
 ### 3. Create Component(s)
 Goto the components folder in your project and create a component. This is like giving a wireframe to your component. You can use simple HTML to do so.
 
@@ -74,6 +82,8 @@ wuObject.registerComponent({
     </ul>`
 });
 ```
+
+As you may have noticed above, the fields from your data are wired using double dashes -- on either sides of the field name. 
 
 ### 4. Setup template(s)
 
@@ -103,7 +113,13 @@ Once you have created the textfile for your template, update the templates.json.
 
 ### 5. Wait! Are we done already? 
 
-#### Yes, we are! ####
+Do not forget to get everything `wired up` with one simple command in any Javascript block one your page.
+
+```js
+wuObject.init();
+```
+
+#### Now, we are ready! ####
 
 If you have node installed, simply type from the project directory. 
 
