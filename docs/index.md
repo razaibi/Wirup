@@ -1,4 +1,4 @@
-﻿![Image](https://raw.githubusercontent.com/razaibi/Wirup/master/projectArtwork/Logo.png)
+![Image](https://raw.githubusercontent.com/razaibi/Wirup/master/projectArtwork/Logo.png)
 
 ## Introduction
 
@@ -10,18 +10,59 @@ Like most of my other projects, Wirup will remain free (with a MIT license) and 
 
 ### 1. Project Structure
 
+__Double dashes indicate files inside folders__
+
 #### Optional files and folder (included in sample project)
+
 ```
--components
+components
 --components.js
--css
+css
 --main.css
--img
---img/
 -sample.html
 ```
 
-### 2. Create Component(s)
+#### Mandatory files and folders
+```
+js
+--Wirup.min.js
+templates
+--templats.json
+index.html
+```
+
+
+### 2. Bring in your data
+Define your data sources. These should ideally be JSON objects. In order to maintain a standard in terms of defining data, Wirup's preferred format is as described below
+
+`Maintain same name for datasource variable and the JSON object array (assigned to it).`
+
+###### Below is an example of how JSON data should be structured.
+
+```js
+var computers = {
+    "computers":[
+        {"id":20,
+         "name":"Amazon",
+         "city":"Seattle"
+        },
+        {"id":21,
+         "name":"Dell",
+         "city":"Washington"
+        }
+    ]
+}
+```
+
+Alternatively you could use arrays to feed your UI.
+
+###### Below is an example of how your arrays could look like.
+
+```js
+var arrayList =["Azure",'AWS','Google Cloud'];
+```
+
+### 3. Create Component(s)
 Goto the components folder in your project and create a component. This is like giving a wireframe to your component. You can use simple HTML to do so.
 
 If your component is data driven, make sure to include the attribute `data-list`. Field names of data objects can be mentioned **using double dashes** as shown below.
@@ -42,7 +83,9 @@ wuObject.registerComponent({
 });
 ```
 
-### 3. Setup template(s)
+As you may have noticed above, the fields from your data are wired using double dashes -- on either sides of the field name. 
+
+### 4. Setup template(s)
 
 
 Quickly create a text file that corresponds to the name of the page you want to create. This will contain regular HTML like any other page. Remember **`templates are containers for components`**.
@@ -68,24 +111,23 @@ Once you have created the textfile for your template, update the templates.json.
 }
 ```
 
-### 4. Wait! Are we done already? 
+### 5. Wait! Are we done already? 
 
-#### Yes, we are ####
+Do not forget to get everything `wired up` with one simple command in any Javascript block one your page.
 
-If you have node installed, simply type
+```js
+wuObject.init();
+```
+
+#### Now, we are ready! ####
+
+If you have node installed, simply type from the project directory. 
 
 ```console
 http-server
 ```
 
-
-#### Mandatory files
-```
--js
---Wirup.min.js
--templates
---templats.json
-```
+Alternatively you code host your project in any webservers like any server side technologies like **ASP.Net Core, Bottle, Flask.**
 
 ## Features
 
@@ -114,11 +156,11 @@ Wirup is meant to work with the most commonly used data sources in a structured 
 
 **Natural Data Objects**
 
->Wirup uses natural data objects like JSON and Arrays to serve as data sources for the application. The focus is to avoid managing complex models which need to be maintained separately. 
+>Wirup uses natural data objects like `JSON and Arrays` to serve as data sources for the application. The focus is to avoid managing complex models which need to be maintained separately. 
 
 **Templates**
 
->The application is subdivided into templates (think as separate pages). These are like containers which can be mapped on to specific URLs.
+>The application is subdivided into templates (think as separate pages). These are like `UI containers which can be mapped on to specific URLs`.
 
 **Components**
 
@@ -128,17 +170,19 @@ Wirup is meant to work with the most commonly used data sources in a structured 
 
 >Once a component is defined and its data source setup, its iterative elements and automatically bound to the data source with `two-way-data-binding`. Any change in the DOM elements done via code or editable content, instantly updates the data source (frontend) and maintains sync. This is setup using MutationObservers. 
 
->Consequently, any changes in the data source object, instantly updates the DOM element. This is done using a polling approach where the state of the data source is constantly observed.
+>Consequently, any changes in the data source object, instantly updates the DOM element. This is done using a `polling` approach where the state of the data source is constantly observed.
 
 **The wuObject**
 
-Wirup.js file exposes a global object wuObject which can be used by the application. They key reason this is done to do await with initialization process.
+Wirup.js file exposes a global object wuObject which can be used by the application. They key reason this is done to do away with `initialization` process.
 
 ## Suggested Application Architecture
 
-- `Asynchronous and Service Oriented`
+`Asynchronous and Service Oriented`
 
 Wirup is intentionally developed in a way that caters to modern applications. In setups, where all of the heavy lifting is done by REST based services and UI is only intended for rendering, Wirup is ideal.
 
 
-### Happy Coding!!
+## Happy Coding!!
+
+## Youtube Tutorials to follow shortly.
