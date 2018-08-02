@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wirup</title>
-    <link rel="stylesheet" href="css/main.css" asp-append-version="true" />
+    <link rel="stylesheet" href="css/main.min.css" asp-append-version="true" />
 </head>
 
 <body>
@@ -58,10 +58,19 @@
             </label>
             <input type="checkbox" id="menu_link" role="button">
             <ul class="menu_holder">
-                <li> Nav
+                <li> Home
                     <div class="menu_li_content">
-                        <a href="#/newsPage">News Page</a>
+                        <a href="#/newsPage">Validation</a>
                     </div>
+                </li>
+                <li> sample
+                    <div class="menu_li_content">
+                        <a href="">sub item 01</a>
+                        <a href="">sub item 02</a>
+                    </div>
+                </li>
+                <li onclick="open_hot_menu('hot_menu_list');">
+                    <span class="special">hot menu</span>
                 </li>
             </ul>
         </div>
@@ -76,20 +85,12 @@
 </body>
 <script type="text/javascript" src="js/Wirup.js"></script>
 <script type="text/javascript">
-    //Replace attributes also like href 
-    //Check arrays
-
-
     var computers = '{"computers":[{"id":5,"name":"Amazon","city":"Chicago","state":"IL","url":"https://basecamp.com/"},{"id":17,"name":"Google","city":"Mountain View","state":"CA","url":"http://google.com/"}]}';
     var cars = '{"cars": [{"name": "Ford","models": ["Fiesta", "Focus", "Mustang"],"price": 56},{"name": "BMW","models": ["320", "X3", "X5"],"price": 44},{"name": "Fiat","models": ["500", "Panda"], "price": 33}]}';
+    var news = '{"news":[{"id":5,"headline":"XYZ Changes Law","content":"One more law revision."},{"id":17,"headline":"Mars Rover Landed","content":"Huge step for mankind"}]}';    
+    var arrayList = ["Azure",'AWS','Google Cloud'];
 
-    var news = '{"news":[{"id":5,"headline":"Quantum Computers are Here!!","content":"Paradigm shift in the way we solves problems."},{"id":17,"headline":"Mars Rover Landed","content":"Huge step for mankind"}]}';
-    
     wuObject.init();
 
-
-
-
 </script>
-
 </html>
