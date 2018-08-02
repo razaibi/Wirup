@@ -278,22 +278,25 @@ wirup.prototype  = function(){
                                 }
                                 break;
                             case "array":
-                                if(str.indexOf('--item--')>-1){
-                                    
+                                var _tempChildContents = str.match('--(.*)--' );
+                                if(_tempChildContents){
+                                    _tempChildContents = _tempChildContents[1];
+                                }
+                                if(str.indexOf('--' + _tempChildContents + '--')>-1){
                                     child.nodeValue = window[dataObjectName][rowIndex];
-                                    _bindAttributes(child.parentElement, 'item', window[dataObjectName][rowIndex]);
+                                    _bindAttributes(child.parentElement, _tempChildContents, window[dataObjectName][rowIndex]);
+
                                     var _mutationUICallback = function(mutationsList) {
-                                        for(var i = 0; i < mutationsList.length; i++) {
-                                            _localDataObject[rowIndex] = child.nodeValue;
-                                            
-                                            
-                                            window[dataObjectName] = _localDataObject;
-                                            console.log(window[dataObjectName]);
-                                        }
+                                            for(var i = 0; i < mutationsList.length; i++) {
+                                                _localDataObject[rowIndex] = child.nodeValue;
+                                                
+                                                
+                                                window[dataObjectName] = _localDataObject;
+                                                console.log(window[dataObjectName]);
+                                            }
                                     };
                                     var userInterfaceObserver = new MutationObserver(_mutationUICallback);
                                     userInterfaceObserver.observe(container, _mutationObserverConfig);
-                                   
                                 }
                                 break;
                             }
@@ -371,8 +374,4 @@ wirup.prototype  = function(){
     };
 
 }();
-
-
 window.wuObject = new wirup();
-
-
