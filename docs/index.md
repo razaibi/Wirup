@@ -62,10 +62,18 @@ Alternatively you could use arrays to feed your UI.
 var arrayList =["Azure",'AWS','Google Cloud'];
 ```
 
+##### Also, you could use a simple object like the one shown below:
+
+```js
+var headLineData = {
+        "content":"Wirup is easy!!"
+}
+```
+
 ### 3. Create Component(s)
 Goto the components folder in your project and create a component. This is like giving a wireframe to your component. You can use simple HTML to do so.
 
-If your component is data driven, make sure to include the attribute `data-list`. Field names of data objects can be mentioned **using double dashes** as shown below.
+If your component is data driven used to list data, make sure to include the attribute `data-list`. Field names of data objects can be mentioned **using double dashes** as shown below.
 Make sure **HTML for the component is enclosed in ticks and not single quotes**.
 
 ```js
@@ -82,6 +90,38 @@ wuObject.registerComponent({
     </ul>`
 });
 ```
+
+ALternatively, you could use an **array as the data source** for your component. Below is an exmaple of a component using an array.
+
+```js
+wuObject.registerComponent({
+        "componentName": "arrayBox",
+        "HTML": `<div class="panel" data-list="arrayList">
+                <div class="row">
+                        <p>--item--</p>                       
+                </div>
+    
+    </div>`
+});
+```
+
+Here, the text 'item' is not relevant. Any text **enclosed within the double dashes** will be regarded as an item of the array. For uniformity purposes, it is recommended to use the word 'item' within dashes.
+
+Another way of wiring up would be to use an object like below. If you have a number of independent variables, this approach is handy. Check the above example of the headLineData being used as data source.
+
+```js
+wuObject.registerComponent({
+        "componentName": "scoreBox",
+        "HTML": `<div class="panel">
+                <div class="row">
+                        <h2 class="light_title" data-value="headLineData.content"></h2>
+                </div>
+    
+    </div>`
+});
+
+```
+
 
 As you may have noticed above, the fields from your data are wired using double dashes -- on either sides of the field name. 
 
