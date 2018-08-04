@@ -53,9 +53,7 @@ wuObject.registerComponent({
         "componentName": "scoreBox",
         "HTML": `<div class="panel">
                 <div class="row">
-                        <h2 class="light_title">Score is 101</h2>
-                        <p>Click to see full scoreboard.</p>
-                        
+                        <h2 class="light_title" data-value="headLineData.content"></h2>
                 </div>
     
     </div>`
