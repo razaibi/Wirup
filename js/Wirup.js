@@ -93,6 +93,7 @@ wirup.prototype  = function(){
     },
     _baseDataTemplates = [],
     _dataModels = [],
+    _dataValuesModels = [],
     _setBaseDataTemplate = function(templateName,templateHTML){
         var _found=false;
         for(var i=0;i <= _baseDataTemplates.length-1;i++){
@@ -134,30 +135,52 @@ wirup.prototype  = function(){
                 }
                 if(_dataSnapShotList[i]!=JSON.stringify(window[_dataModels[i]['dataModelName']])){
                     _dataSnapShotList[i] = JSON.stringify(window[_dataModels[i]['dataModelName']])
-                    _bindData();
+                    _bindDataLists();
                 }
             }
         }, 500); 
     },
-    _bindData = function(){
-        _runPreloader();
-        
+    _watchDataValuesModel = function(){
+        setInterval(function(){
+            for(var i=0;i <= _dataValuesModels.length-1;i++){
+                if (eval(_dataValuesModels[i]['dataModelName']) != _dataValuesModels[i]['dataObject']){
+                    _dataValuesModels[i]['dataObject'] = eval(_dataValuesModels[i]['dataModelName']);
+                    _bindDataValues();
+                }
+            }
+        }, 500); 
+    },
+    _bindDataValues = function(){
+        var _dataValueElements = document.querySelectorAll('[data-value]');
+        var _subElementsArray = [];       
+        var _temporaryElement;
+        for (var i =0; i<= _dataValueElements.length-1;i++){
+            var _dataObjectName = _dataValueElements[i].getAttribute("data-value");
+            _temporaryElement = document.createElement(_dataValueElements[i].tagName);
+            _dataValueElements[i].innerHTML = eval(_dataObjectName);
+            _setDataModel(_dataValuesModels,_dataObjectName, eval(_dataObjectName));
+            var _mutationUICallback = function(mutationsList) {
+                for(var i = 0; i < mutationsList.length; i++) {
+                    eval(_dataObjectName + '="' + _dataValueElements[i].innerHTML + '"');
+                }
+            };
+            var _DataValuesUIObserver = new MutationObserver(_mutationUICallback);
+            _DataValuesUIObserver.observe(_dataValueElements[i], _mutationObserverConfig);
+        }
+    },
+    _bindDataLists = function(){
         var _dataListElements = document.querySelectorAll('[data-list]');
         var _subElementsArray = [];       
         var _temporaryElement;
         for (var i =0; i<= _dataListElements.length-1;i++){
             var _dataObjectName = _dataListElements[i].getAttribute("data-list");
             _temporaryElement = document.createElement(_dataListElements[i].tagName);
-            
             _setDataModel(_dataModels,_dataObjectName, window[_dataObjectName]);
             _setBaseDataTemplate(_dataObjectName,_dataListElements[i]);
-            
-            _subElementsArray = _renderGeneralDataList(_dataObjectName, _dataListElements[i]);
-            
+            _subElementsArray = _renderDataList(_dataObjectName, _dataListElements[i]);
             for (var z =0; z<= _subElementsArray.length-1;z++){
                 _temporaryElement.appendChild(_subElementsArray[z]);
             }
-
             _temporaryElement = _reassignAttributes(_dataListElements[i],_temporaryElement);
             _dataListElements[i].parentNode.replaceChild(_temporaryElement,_dataListElements[i]);
         }
@@ -169,7 +192,7 @@ wirup.prototype  = function(){
         }
         return targetNode;
     },
-    _renderGeneralDataList = function(dataObjectName,htmlElement){
+    _renderDataList = function(dataObjectName,htmlElement){
         var _localDataObject = _getParseableDataObject(dataObjectName);
         window[dataObjectName] = _localDataObject;
         var _templateHtml=_getBaseDataTemplateHTML(dataObjectName);
@@ -354,8 +377,11 @@ wirup.prototype  = function(){
         },1000);
         
         setTimeout(function(){ 
-            _bindData();
+            _runPreloader();
+            _bindDataValues();
+            _bindDataLists();
             _watchDataModel();
+            _watchDataValuesModel();
         },1500);
         _bindRouter();
         _loadScript('components/components.js');
@@ -365,7 +391,7 @@ wirup.prototype  = function(){
         wu:_getElement,
         wijax:_wijax,
         jsonize:_jsonize,
-        bindData:_bindData,
+        bindDataLists:_bindDataLists,
         loadScript:_loadScript,
         setTemplateHolder:_setTemplateHolder,
         registerComponent : _registerComponent,
