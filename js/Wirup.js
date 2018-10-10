@@ -36,13 +36,16 @@ wirup.prototype  = function(){
             window.location = "/#/";
         }
        
-        for(var i=0;i<=_viewTemplates.length-1;i++){
+        if(_viewTemplates){
+            for(var i=0;i<=_viewTemplates.length-1;i++){
             
-            if(_viewTemplates[i]['url']==_url){
-                _index = i;
+                if(_viewTemplates[i]['url']==_url){
+                    _index = i;
+                }
             }
+            _fillTemplate(_index, target);
         }
-        _fillTemplate(_index, target);
+        
     },
     _fillTemplate = function(index, target){
         _wijax("GET","templates/" + _viewTemplates[index]['HTML'],"text/plain; charset=UTF-8", function(){
@@ -73,8 +76,10 @@ wirup.prototype  = function(){
     },
     _renderComponents = function(){
         var _templateComponents;
+        console.log(_components.length);
         for(var i=0;i<=_components.length-1;i++){
             _templateComponents = document.getElementsByTagName(_components[i]['componentName']);
+
             for(var z=0;z<=_templateComponents.length-1;z++){
                 if (_templateComponents[z] != undefined && _templateComponents[z] != null){
                     _templateComponents[z].innerHTML = _components[i]['HTML'];
@@ -167,6 +172,7 @@ wirup.prototype  = function(){
             var _DataValuesUIObserver = new MutationObserver(_mutationUICallback);
             _DataValuesUIObserver.observe(_dataValueElements[i], _mutationObserverConfig);
         }
+        
     },
     _bindDataLists = function(){
         var _dataListElements = document.querySelectorAll('[data-list]');
@@ -184,6 +190,7 @@ wirup.prototype  = function(){
             _temporaryElement = _reassignAttributes(_dataListElements[i],_temporaryElement);
             _dataListElements[i].parentNode.replaceChild(_temporaryElement,_dataListElements[i]);
         }
+        
     },
     _reassignAttributes = function(sourceNode, targetNode){
         var _attributeKeys = sourceNode.attributes;
@@ -195,12 +202,11 @@ wirup.prototype  = function(){
     _renderDataList = function(dataObjectName,htmlElement){
         var _localDataObject = _getParseableDataObject(dataObjectName);
         window[dataObjectName] = _localDataObject;
-        var _templateHtml=_getBaseDataTemplateHTML(dataObjectName);
+        var _templateHtml= _getBaseDataTemplateHTML(dataObjectName);
         var _subElementsArray = [];
         var _templateElement = document.createElement(_templateHtml.tagName);
         _templateElement.className = _templateHtml.className;
         _subElementsArray = _buildSubElements(_localDataObject,dataObjectName, _templateHtml);
-        
         return _subElementsArray;
     },
     _buildSubElements = function(dataObject,dataObjectName, templateHtml){
@@ -210,7 +216,8 @@ wirup.prototype  = function(){
             case "object":
                 for (var x=0; x<=dataObject[dataObjectName].length-1;x++) {
                     var row = dataObject[dataObjectName][x];
-                    _processedNode = _parseDataKeys(dataObjectName, row, x, templateHtml.childNodes[1]);
+                    //_processedNode = _parseDataKeys(dataObjectName, row, x, templateHtml.childNodes[1]);
+                    _processedNode = __dataParser(dataObjectName, row, templateHtml);
                     _subElementsArray.push(_processedNode);
                 }
                 break;
@@ -224,6 +231,66 @@ wirup.prototype  = function(){
                 break;
         }
         return _subElementsArray;
+    },
+    __dataParser = function(dataObjectName, row, templateHtml){
+        var _newNode = templateHtml.cloneNode(true);
+        var currentNodes = _newNode.querySelectorAll("*");
+        var markedNode;
+        var markedAttributes = [];
+        var markedNodes = [];
+        var markerFlag=false;
+        var markedKey;
+        var _localDataObject = window[dataObjectName];
+        for (var key in row){
+            for(var x=0;x<=currentNodes.length-1;x++){
+                var currentNodeAttributes = currentNodes[x].attributes;
+                for(var z =0; z < currentNodeAttributes.length;z++){
+                    if(currentNodeAttributes[z].nodeValue.indexOf('--' + key + '--')>-1){
+                        currentNodes[x].setAttribute(currentNodeAttributes[z].name, row[key]);
+                        markedAttributes.push({
+                            "attributeName":currentNodeAttributes[z].name,
+                            "attributeKey":key,
+                            "node":currentNodes[x]
+                        });
+                        markerFlag=true;
+                    }
+                   
+                }
+                 if(currentNodes[x].innerText.indexOf('--' + key + '--')>-1 || currentNodes[x].innerHTML.indexOf('--' + key + '--')>-1){
+                     currentNodes[x].innerText = row[key];
+                     currentNodes[x].nodeValue=row[key];
+                     markedNodes.push({
+                        "node":currentNodes[x],
+                        "nodeKey": key
+                    });
+                     markerFlag=true;
+                 }
+
+                 if(markerFlag){
+                    var _mutationUICallback = function(mutationsList) {
+
+                        for(var item in markedNodes){
+                            _localDataObject[dataObjectName][x][markedNodes[item]['nodeKey']] = markedNodes[item]['node'].innerHTML;
+                            window[dataObjectName] = _localDataObject;
+                        }
+
+                        for(var item in markedAttributes){
+                            _localDataObject[dataObjectName][x][markedAttributes[item]['attributeKey']] = markedAttributes[item]['node'].getAttribute(markedAttributes[item]['attributeName']);
+                            window[dataObjectName] = _localDataObject;
+                        }
+
+                    };
+                    var userInterfaceObserver = new MutationObserver(_mutationUICallback);
+                    userInterfaceObserver.observe(_newNode, _mutationObserverConfig);
+                 }
+
+            }
+        }
+        
+        return _newNode;
+    },
+    __conditionalParse = function(statement, node){
+        return eval(statement);
     },
     _getParseableDataObject = function(dataObjectName){
         var _parseableDataObject = null;
@@ -274,16 +341,23 @@ wirup.prototype  = function(){
         }
     },
     _searchDataNodes = function(dataObjectName,row,rowIndex, container, key) {
-        function recursor(container){
-                for (var i = 0; i < container.childNodes.length; i++) {
-                    var child = container.childNodes[i];
-                    if(child.nodeType !== Node.TEXT_NODE && child.childNodes){
-                        recursor(child);
-                    }else{
-                        var str=child.nodeValue;
+        var currentNodes = container.querySelectorAll("*");
 
-                        var _dataObjectType = _getDataObjectType(window[dataObjectName]);
-                        var _localDataObject = window[dataObjectName];
+        for (var i = 0; i < currentNodes.length; i++) {
+            var currentNodeAttributes = currentNodes[i].attributes;
+            for(var x =0; x < currentNodeAttributes.length;x++){
+                if(currentNodeAttributes[x].nodeValue == '--' + key + '--'){
+                    currentNodeAttributes[x].nodeValue = row[key];
+                }
+            }
+            
+            var child = currentNodes[i].childNodes[0];
+            
+            
+                var str=child.nodeValue;
+                
+                var _dataObjectType = _getDataObjectType(window[dataObjectName]);
+                var _localDataObject = window[dataObjectName];
                         switch (_dataObjectType){
                             case "object":
                                 if(str.indexOf('--' + key + '--')>-1){
@@ -293,7 +367,7 @@ wirup.prototype  = function(){
                                         for(var i = 0; i < mutationsList.length; i++) {
                                             _localDataObject[dataObjectName][rowIndex][key] = child.nodeValue;
                                             window[dataObjectName] = _localDataObject;
-                                            console.log(window[dataObjectName]);
+                                            
                                         }
                                     };
                                     var userInterfaceObserver = new MutationObserver(_mutationUICallback);
@@ -315,18 +389,19 @@ wirup.prototype  = function(){
                                                 
                                                 
                                                 window[dataObjectName] = _localDataObject;
-                                                console.log(window[dataObjectName]);
+                                                
                                             }
                                     };
                                     var userInterfaceObserver = new MutationObserver(_mutationUICallback);
                                     userInterfaceObserver.observe(container, _mutationObserverConfig);
                                 }
                                 break;
-                            }
-                        };
-                };
-        };
-        recursor(container);
+                        }
+            
+                
+        }
+        
+       
         return container;
     },
     _get_keys = function (obj)
@@ -348,14 +423,14 @@ wirup.prototype  = function(){
     _loadScript = function(scriptPath){
         var _newScript = document.createElement('script');
         _newScript.type = 'text/javascript';
-        _newScript.src = scriptPath;
+        _newScript.src = scriptPath + '?' + (new Date).getTime();
         document.getElementsByTagName('head')[0].appendChild(_newScript);
     },
     _runPreloader = function(){
         var _elem = document.getElementById("progress_bar");
             var width = 1;
             _elem.parentElement.style.display='block';
-            var id = setInterval(_updateLoader, 20);
+            var _updateLoaderInterval = setInterval(_updateLoader, 120);
             function _updateLoader() {
             if (width >= 100) {
                     clearInterval(id);
@@ -364,25 +439,24 @@ wirup.prototype  = function(){
                     width++;
                     _elem.style.width = width + '%';
             }
+            window.clearInterval(_updateLoaderInterval);
         }
+        
     },
     _dataSnapShotList = [],
     _init = function(){
-
         _registerTemplates();
-        setTimeout(function(){ _getTemplate('contentBody'); }, 500);
-        
-        setTimeout(function(){ 
+        setTimeout(function () { _getTemplate('contentBody'); }, 500);
+        setTimeout(function () {
             _renderComponents();
-        },1000);
-        
-        setTimeout(function(){ 
+        }, 1000);
+        setTimeout(function () {
             _runPreloader();
             _bindDataValues();
             _bindDataLists();
             _watchDataModel();
             _watchDataValuesModel();
-        },1500);
+        }, 1500);
         _bindRouter();
         _loadScript('components/components.js');
     };
