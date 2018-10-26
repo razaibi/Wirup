@@ -1,70 +1,13 @@
-
-wuObject.registerComponent({
-    "componentName": "computerBox",
-    "HTML": `
-            <ul class="panel" data-list="computers">
-            <li class="row">
-                <p class="notif_title">--state--</p>
-                <p class="notif_desc">--city--</p>
-                
-            </li>
-                            
-    </ul>`
-});
-
-wuObject.registerComponent({
-    "componentName": "priceBox",
-    "HTML": `<div class="panel" data-list="cars">
-            <div class="row">
-                    <h2 contenteditable="true" class="dark_title">--name--</h2>
-                    <p>--price--</p>
-            </div>
-
-</div>`
+wuObject.registerComponent('samplebox', (item) => {
+        return `
+          <h2>
+          Hey User: ${item.name}
+          </h2>`            
 });
 
 
-wuObject.registerComponent({
-    "componentName": "newsBox",
-    "HTML": `<div class="panel" data-list="news">
-            <div class="row">
-                    <h2 class="light_title">--headline--</h2>
-                    <p>--content--</p>
-                    
-            </div>
-
-</div>`
-});
-
-
-wuObject.registerComponent({
-        "componentName": "randomBox",
-        "HTML": `<div class="panel">
-                <div class="row">
-                        <h2 class="light_title">Big News from YYZ</h2>
-                        <p>Visit your office now.</p>
-                        
-                </div>
-    
-    </div>`
-});
-
-wuObject.registerComponent({
-        "componentName": "scoreBox",
-        "HTML": `<div class="panel">
-                <div class="row">
-                        <h2 class="light_title" data-value="headLineData.content"></h2>
-                </div>
-    
-    </div>`
-});
-
-wuObject.registerComponent({
-        "componentName": "arrayBox",
-        "HTML": `<div class="panel" data-list="arrayList">
-                <div class="row">
-                        <p>--item--</p>                       
-                </div>
-    
-    </div>`
+wuObject.registerComponent('linkbox', (item) => {return `
+                    <p>
+                        Link name: ${item.name}
+                    </p>`            
 });
