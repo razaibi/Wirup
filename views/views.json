@@ -1,0 +1,19 @@
+{
+    "views": [
+        {
+            "viewName": "mainPage",
+            "url": "/",
+            "HTML": "mainPage.txt"
+        },
+        {
+            "viewName": "newsPage",
+            "url": "/newsPage",
+            "HTML": "newPage.txt"
+        },
+        {
+            "viewName": "circlesPage",
+            "url": "/circles",
+            "HTML": "circlesPage.txt"
+        }
+    ]
+}
