@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Wirup is essentially a nano web UI framework aimed at enabling complex features like **two-way-data-binding**, **routing**, **component portability**, etc. with minimal lines of code. There are more complex and established frameworks facilitating these features (and more). However, they may have steep learning curves or may be heavy in size. Wirup is meant to enable beginners to get up and running quickly.
+Wirup is essentially a nano web UI framework aimed at enabling complex features like **one-way-data-binding**, **routing**, **component portability**, etc. with minimal lines of code. There are more complex and established frameworks facilitating these features (and more). However, they may have steep learning curves or may be heavy in size. Wirup is meant to enable beginners to get up and running quickly.
 
 Like most of my other projects, Wirup will remain free (with a MIT license) and open to improvements and criticism all along the way. 
 
@@ -10,7 +10,7 @@ Like most of my other projects, Wirup will remain free (with a MIT license) and 
 
 ### 1. Project Structure
 
-__Double dashes indicate files inside folders__
+`Double dashes indicate files inside folders.`
 
 #### Optional files and folder (included in sample project)
 
@@ -26,32 +26,23 @@ css
 ```
 js
 --Wirup.min.js
-templates
---templats.json
+views
+--views.json
 index.html
 ```
 
 
 ### 2. Bring in your data
-Define your data sources. These should ideally be JSON objects. In order to maintain a standard in terms of defining data, Wirup's preferred format is as described below
-
-`Maintain same name for datasource variable and the JSON object array (assigned to it).`
+Wirup now uses the concept of a centralized datastore to aggregate all data source. Adding your data can simply done in the format showed below.
 
 ###### Below is an example of how JSON data should be structured.
 
 ```js
-var computers = {
-    "computers":[
-        {"id":20,
-         "name":"Amazon",
-         "city":"Seattle"
-        },
-        {"id":21,
-         "name":"Dell",
-         "city":"Washington"
-        }
-    ]
-}
+ wuObject.registerData('links',[
+                { name: 'Google'},
+                { name: 'Duck Duck go' },
+                { name: 'Bing' }
+]);
 ```
 
 Alternatively you could use arrays to feed your UI.
@@ -59,55 +50,52 @@ Alternatively you could use arrays to feed your UI.
 ###### Below is an example of how your arrays could look like.
 
 ```js
-var arrayList =["Azure",'AWS','Google Cloud'];
+ wuObject.registerData('cloudServices',['Azure','AWS','Google Cloud']);
 ```
 
 ##### Also, you could use a simple object like the one shown below:
 
 ```js
-var headLineData = {
-        "content":"Wirup is easy!!"
-}
+ wuObject.registerData('headLineData','Wirup is Easy');
 ```
 
 ### 3. Create Component(s)
 Goto the components folder in your project and create a component. This is like giving a wireframe to your component. You can use simple HTML to do so.
 
-If your component is data driven used to list data, make sure to include the attribute `data-list`. Field names of data objects can be mentioned **using double dashes** as shown below.
+#####JSON Array as data source 
+
+Wirup has evolved to incorporate template literals as they have become a natural part of JS and the web. 
+
 Make sure **HTML for the component is enclosed in ticks and not single quotes**.
 
 ```js
-wuObject.registerComponent({
-    "componentName": "computerBox",
-    "HTML": `
-            <ul class="panel" data-list="computers">
-            <li class="row">
-                <p class="notif_title">--state--</p>
-                <p class="notif_desc">--city--</p>
-                
-            </li>
-                            
-    </ul>`
+wuObject.registerComponent('searchengines', (item) => {
+        return `
+          <h2>
+          Engine Name : ${item.name}
+          </h2>`            
 });
 ```
 
-ALternatively, you could use an **array as the data source** for your component. Below is an exmaple of a component using an array.
+The 'item' argument can be renamed to suit your naming scheme. However, make sure the argument name is used in the component template accordingly.
+
+#####Regular JS Array as data source 
+
+Alternatively, you could use an **array as the data source** for your component. Below is an exmaple of a component using an array.
 
 ```js
-wuObject.registerComponent({
-        "componentName": "arrayBox",
-        "HTML": `<div class="panel" data-list="arrayList">
-                <div class="row">
-                        <p>--item--</p>                       
-                </div>
-    
-    </div>`
+wuObject.registerComponent('searchengines', (item) => {
+        return `
+          <h2>
+          Link : ${item}
+          </h2>`            
 });
 ```
 
-Here, the text 'item' is not relevant. Any text **enclosed within the double dashes** will be regarded as an item of the array. For uniformity purposes, it is recommended to use the word 'item' within dashes.
 
 Another way of wiring up would be to use an object like below. If you have a number of independent variables, this approach is handy. Check the above example of the headLineData being used as data source.
+
+`The only caveat is that if you have html elements or components using the data source(s), make sure the data source is registered before rendering the components.`
 
 ```js
 wuObject.registerComponent({
@@ -141,9 +129,9 @@ Once you have created the textfile for your template, update the templates.json.
 
 ```json
 {
-    "templates": [
+    "views": [
         {
-            "templateName": "mainPage",
+            "viewName": "mainPage",
             "url": "/",
             "HTML": "mainPage.txt"
         }
@@ -171,9 +159,9 @@ Alternatively you code host your project in any webservers like any server side 
 
 ## Features
 
-- **Two-Way-Data-Binding**
+- **One-Way-Data-Binding**
 
-Wirup takes care of keeping in sync your UI elements and their data sources. 
+Wirup aims to keep your UI element(s) in sync with your data. This may be a move away from the initial approach to accomodate two-way binding. This is a conscious decision to minimize overhead in the framework and keeping it light weight. 
 
 - **Component Portability**
 
@@ -198,9 +186,9 @@ Wirup is meant to work with the most commonly used data sources in a structured 
 
 >Wirup uses natural data objects like `JSON and Arrays` to serve as data sources for the application. The focus is to avoid managing complex models which need to be maintained separately. 
 
-**Templates**
+**Views**
 
->The application is subdivided into templates (think as separate pages). These are like `UI containers which can be mapped on to specific URLs`.
+>The application is subdivided into views (think as separate pages). These are like `UI containers which can be mapped on to specific URLs`.
 
 **Components**
 
@@ -224,3 +212,5 @@ Wirup is intentionally developed in a way that caters to modern applications. In
 
 
 ## Happy Coding!!
+
+
