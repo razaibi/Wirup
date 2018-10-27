@@ -179,6 +179,13 @@ In its limited number of components, Wirup pushes developers to structure data d
 
 Wirup is meant to work with the most commonly used data sources in a structured manner.
 
+## Bonus Feature(s)
+
+- **Support for Analytics**
+
+Wirup is built around continuous improvement and imrprovisation. The framework provisions this by providing a data structure to track user interactions. This feature should be solely used to identify bottle necks in the user experience and deliver a quality experience.
+
+Wirup strictly recommend against using these traces to pepper the experience with adware.
 
 ## Wirup Architecture
 
@@ -212,3 +219,10 @@ Wirup is intentionally developed in a way that caters to modern applications. In
 
 
 ## Happy Coding!!
+
+
+
+Changes:
+Data Registeration updated
+Component Registration Updated.
+Support for Analytics
