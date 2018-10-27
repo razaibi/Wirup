@@ -17,12 +17,12 @@ wirup.prototype  = function(){
         return httpRequest.responseText;
     },
     _appLocation = window.location.hash.split("#")[1],
-    _viewTemplates,
-    _registerTemplates = () => {
-        _wijax("GET","templates/templates.json", "application/json; charset=UTF-8", _getTemplates);
+    _views,
+    _registerViews = () => {
+        _wijax("GET","views/views.json", "application/json; charset=UTF-8", _getViews);
     },
-    _getTemplates = (data) => {
-        _viewTemplates = JSON.parse(data.target.responseText)['templates'];
+    _getViews = (data) => {
+        _views = JSON.parse(data.target.responseText)['views'];
     }, 
     _getTemplate = (target) => {
         var _index;
@@ -30,19 +30,17 @@ wirup.prototype  = function(){
         if(_appLocation === undefined){
             window.location = "/#/";
         }
-       
-        if(_viewTemplates){
-            for(var i=0;i<=_viewTemplates.length-1;i++){
-            
-                if(_viewTemplates[i]['url']==_url){
+        if(_views){
+            for(var i=0;i<=_views.length-1;i++){
+                if(_views[i]['url']==_url){
                     _index = i;
                 }
             }
-            _fillTemplate(_index, target);
+            _fillView(_index, target);
         }
     },
-    _fillTemplate = (index, target) => {
-        _wijax("GET","templates/" + _viewTemplates[index]['HTML'],"text/plain; charset=UTF-8", function(){
+    _fillView = (index, target) => {
+        _wijax("GET","views/" + _views[index]['HTML'],"text/plain; charset=UTF-8", function(){
             _getElement(target).innerHTML = this.responseText;
         });
     },
@@ -62,14 +60,34 @@ wirup.prototype  = function(){
     _registerData = (dataItemName, value) => {
         _dataStore[dataItemName] = value
     },
+    _componentMap = [],
+    _addComponentMapRoute = (viewName, componentId, componentName, dataSourceName) => {
+        _componentMap.push({ 'view' : viewName, 'componentId' : componentId, 'component' : componentName, 'datasource' : dataSourceName });
+    },
+    _renderViewComponents = () => {
+        var _templateComponents = _getElement('contentBody').getElementsByTagName("*");
+        var _builtHTML = '';
+        for(var z=0;z<=_templateComponents.length-1;z++){
+                _builtHTML += '<' + _templateComponents[z].tagName.toLowerCase() + ' datasource="' + _templateComponents[z].getAttribute('datasource')  + '" >';
+                _builtHTML += _buildComponent( _templateComponents[z].tagName.toLowerCase(),_templateComponents[z].getAttribute('datasource'));
+                _builtHTML += '</' + _templateComponents[z].tagName.toLowerCase() + '>';
+                _addComponentMapRoute(_appLocation, _componentId, _templateComponents[z].tagName.toLowerCase(), _templateComponents[z].getAttribute('datasource'));
+            }
+        _getElement('contentBody').innerHTML = _builtHTML;
+        
+    },
+    _updateComponentsByDataSourceName = (dataSourceName) => {
+        _getElement('contentBody').querySelectorAll('[datasource="' + dataSourceName  + '"]').forEach(function(elem) {
+            elem.innerHTML = _buildComponent(elem.tagName.toLowerCase(), dataSourceName);
+        });
+        
+    },
     _buildComponent = (componentName, datasourceName) => {
         let output = '';
         var dataSourceType = typeof _dataStore[datasourceName];
         switch (dataSourceType){
             case('object'):
-                
                 output = _dataStore[datasourceName].map((item, i) => {
-                    
                     return _components[componentName](item);
                 });
                 break;
@@ -85,24 +103,16 @@ wirup.prototype  = function(){
             dataSourceType = typeof _dataStore[datasourceNames[index]];
             switch (dataSourceType){
                 case('object'):
-                    output += _dataStore[datasourceNames[index]].map((item, i) => {
+                    output = _dataStore[datasourceNames[index]].map((item, i) => {
                         return _components[componentName](item);
                     });
                     break;
                 case('string'):
-                    output += _components[componentName](_dataStore[datasourceNames[index]]);
+                    output = _components[componentName](_dataStore[datasourceNames[index]]);
                     break;
             }
         });
         return output.join("");
-    },
-    _renderTemplateComponents = () => {
-        var _templateComponents = _getElement('contentBody').getElementsByTagName("*");
-        var builtHTML = '';
-        for(var z=0;z<=_templateComponents.length-1;z++){
-                builtHTML += _buildComponent(_templateComponents[z].tagName.toLowerCase(),_templateComponents[z].getAttribute('dataSource'));
-        }
-        _getElement('contentBody').innerHTML =builtHTML;
     },
     _getObjectType = function(dataObject){
         if(Array.isArray(dataObject)){
@@ -110,9 +120,7 @@ wirup.prototype  = function(){
         }else{
             return typeof(dataObject);
         }
-        
     },
-    
     _watchDataModel = function(){
         var _dataSnapShotList = {}
         setInterval(function(){
@@ -124,8 +132,8 @@ wirup.prototype  = function(){
 
                 if(_dataSnapShotList[key]!=stringified){
                     _dataSnapShotList[key] = stringified;
-
-                    _renderUI();
+                    //_renderUI();
+                    _updateComponentsByDataSourceName(key);
                 }
             }
 
@@ -147,6 +155,16 @@ wirup.prototype  = function(){
             return window[objectName];
         }
     },
+    _generateUUID = () => {
+        var currentDate = new Date().getTime();
+        currentDate = Date.now();
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = (currentDate + Math.random()*16)%16 | 0;
+            currentDate = Math.floor(currentDate/16);
+            return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+        });
+        return uuid;
+    },
     _loadScript = function(scriptPath){
         var _newScript = document.createElement('script');
         _newScript.type = 'text/javascript';
@@ -161,7 +179,6 @@ wirup.prototype  = function(){
             var _updateLoaderInterval = setInterval(_updateLoader, 120);
             function _updateLoader() {
             if (width >= 100) {
-                    clearInterval(id);
                     _elem.parentElement.style.display='none';
                     window.clearInterval(_updateLoaderInterval);
             } else {
@@ -192,12 +209,12 @@ wirup.prototype  = function(){
     },
     _renderUI = () => {
         setTimeout(function () { _getTemplate('contentBody'); }, 1000);
-        setTimeout(function () { _renderTemplateComponents(); }, 1500);
+        setTimeout(function () { _renderViewComponents(); }, 1500);
     },
-    _init = function(){
+    _init = () => {
         _runPreloader();
         _loadScript('components/components.js');
-        setTimeout(function () { _registerTemplates(); }, 500);
+        setTimeout(function () { _registerViews(); }, 500);
         _renderUI();
         _watchDataModel();
         _bindRouter();
