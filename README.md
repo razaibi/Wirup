@@ -62,7 +62,7 @@ Alternatively you could use arrays to feed your UI.
 ### 3. Create Component(s)
 Goto the components folder in your project and create a component. This is like giving a wireframe to your component. You can use simple HTML to do so.
 
-#####JSON Array as data source 
+##### JSON Array as data source 
 
 Wirup has evolved to incorporate template literals as they have become a natural part of JS and the web. 
 
@@ -79,15 +79,15 @@ wuObject.registerComponent('searchengines', (item) => {
 
 The 'item' argument can be renamed to suit your naming scheme. However, make sure the argument name is used in the component template accordingly.
 
-#####Regular JS Array as data source 
+##### Regular JS Array as data source 
 
 Alternatively, you could use an **array as the data source** for your component. Below is an exmaple of a component using an array.
 
 ```js
-wuObject.registerComponent('searchengines', (item) => {
+wuObject.registerComponent('cloudServices', (item) => {
         return `
           <h2>
-          Link : ${item}
+          Name : ${item}
           </h2>`            
 });
 ```
@@ -212,5 +212,3 @@ Wirup is intentionally developed in a way that caters to modern applications. In
 
 
 ## Happy Coding!!
-
-
