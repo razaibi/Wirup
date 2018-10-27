@@ -1,5 +1,0 @@
-<newsBox></newsBox>
-
-
-<computerBox></computerBox>
-
