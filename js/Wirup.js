@@ -74,13 +74,14 @@ wirup.prototype  = function(){
                 _addComponentMapRoute(_appLocation, _componentId, _templateComponents[z].tagName.toLowerCase(), _templateComponents[z].getAttribute('datasource'));
             }
         _getElement('contentBody').innerHTML = _builtHTML;
+        _registerAction('Switched View','Content Body','No Comment.');
         
     },
     _updateComponentsByDataSourceName = (dataSourceName) => {
         _getElement('contentBody').querySelectorAll('[datasource="' + dataSourceName  + '"]').forEach(function(elem) {
             elem.innerHTML = _buildComponent(elem.tagName.toLowerCase(), dataSourceName);
+            _registerAction('Updated Data.', elem.tagName.toLowerCase(),'No Comment.');
         });
-        
     },
     _buildComponent = (componentName, datasourceName) => {
         let output = '';
