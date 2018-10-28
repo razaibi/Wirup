@@ -5,43 +5,63 @@ wirup.prototype  = function(){
         return document.getElementById(element_id);
     },
     _wijax = (callType, url, contentType, callback) => {
-        var httpRequest = new XMLHttpRequest();
-        httpRequest.open(callType, url,true);
-        httpRequest.setRequestHeader("Content-Type", contentType);
-        httpRequest.setRequestHeader('cache-control', 'max-age=0');
-        httpRequest.setRequestHeader('expires', '0');
-        httpRequest.setRequestHeader('expires', 'Tue, 01 Jan 1980 1:00:00 GMT');
-        httpRequest.setRequestHeader('pragma', 'no-cache');
-        httpRequest.onload = callback;
-        httpRequest.send();
-        return httpRequest.responseText;
+        return new Promise(function (resolve, reject) {
+            var httpRequest = new XMLHttpRequest();
+            httpRequest.open(callType, url,true);
+            httpRequest.setRequestHeader("Content-Type", contentType);
+            httpRequest.setRequestHeader('cache-control', 'max-age=0');
+            httpRequest.setRequestHeader('expires', '0');
+            httpRequest.setRequestHeader('expires', 'Tue, 01 Jan 1980 1:00:00 GMT');
+            httpRequest.setRequestHeader('pragma', 'no-cache');
+            httpRequest.onreadystatechange = () => {
+                if (httpRequest.readyState !== 4) {
+                    return;
+                }
+                if (httpRequest.status === 200) {
+                    
+                    resolve(callback(httpRequest.responseText));
+
+                } else {
+                    const error = httpRequest.statusText || 'The reason is mysterious. Call Yoda!';
+                    reject(error);
+                }
+            };
+            httpRequest.send();
+            return httpRequest.responseText;
+        });
+        
     },
     _appLocation = window.location.hash.split("#")[1],
     _views,
     _registerViews = () => {
-        _wijax("GET","views/views.json", "application/json; charset=UTF-8", _getViews);
+        return _wijax("GET","views/views.json", "application/json; charset=UTF-8", _getViews);
     },
     _getViews = (data) => {
-        _views = JSON.parse(data.target.responseText)['views'];
+        _views = JSON.parse(data)['views'];
     }, 
     _getTemplate = (target) => {
-        var _index;
-        var _url = _appLocation;
-        if(_appLocation === undefined){
-            window.location = "/#/";
-        }
-        if(_views){
-            for(var i=0;i<=_views.length-1;i++){
-                if(_views[i]['url']==_url){
-                    _index = i;
-                }
+        return new Promise(function (resolve, reject) {
+            var _index;
+            var _url = _appLocation;
+            if(_appLocation === undefined){
+                window.location = "/#/";
             }
-            _fillView(_index, target);
-        }
+            if(_views){
+                for(var i=0;i<=_views.length-1;i++){
+                    if(_views[i]['url']==_url){
+                        _index = i;
+                    }
+                }
+                _fillView(_index, target).then(()=>{
+                    resolve();
+                });
+            }
+            
+        });
     },
     _fillView = (index, target) => {
-        _wijax("GET","views/" + _views[index]['HTML'],"text/plain; charset=UTF-8", function(){
-            _getElement(target).innerHTML = this.responseText;
+        return _wijax("GET","views/" + _views[index]['HTML'], "application/json; charset=UTF-8", (data)=>{
+            _getElement(target).innerHTML = data;
         });
     },
     _bindRouter = () => {
@@ -65,17 +85,19 @@ wirup.prototype  = function(){
         _componentMap.push({ 'view' : viewName, 'componentId' : componentId, 'component' : componentName, 'datasource' : dataSourceName });
     },
     _renderViewComponents = () => {
-        var _templateComponents = _getElement('contentBody').getElementsByTagName("*");
-        var _builtHTML = '';
-        for(var z=0;z<=_templateComponents.length-1;z++){
-                _builtHTML += '<' + _templateComponents[z].tagName.toLowerCase() + ' datasource="' + _templateComponents[z].getAttribute('datasource')  + '" >';
-                _builtHTML += _buildComponent( _templateComponents[z].tagName.toLowerCase(),_templateComponents[z].getAttribute('datasource'));
-                _builtHTML += '</' + _templateComponents[z].tagName.toLowerCase() + '>';
-                _addComponentMapRoute(_appLocation, _componentId, _templateComponents[z].tagName.toLowerCase(), _templateComponents[z].getAttribute('datasource'));
+        return new Promise(function (resolve, reject) {
+            var _templateComponents = _getElement('contentBody').getElementsByTagName("*");
+            var __viewHTML = '';
+            for(var z=0;z<=_templateComponents.length-1;z++){
+                __viewHTML += '<' + _templateComponents[z].tagName.toLowerCase() + ' datasource="' + _templateComponents[z].getAttribute('datasource')  + '" >';
+                __viewHTML += _buildComponent( _templateComponents[z].tagName.toLowerCase(),_templateComponents[z].getAttribute('datasource'));
+                __viewHTML += '</' + _templateComponents[z].tagName.toLowerCase() + '>';
+                    //_addComponentMapRoute(_appLocation, _componentId, _templateComponents[z].tagName.toLowerCase(), _templateComponents[z].getAttribute('datasource'));
             }
-        _getElement('contentBody').innerHTML = _builtHTML;
-        _registerAction('Switched View','Content Body','No Comment.');
-        
+            _getElement('contentBody').innerHTML = __viewHTML;
+            _registerAction('Switched View','Content Body','No Comment.');
+            resolve();
+        });
     },
     _updateComponentsByDataSourceName = (dataSourceName) => {
         _getElement('contentBody').querySelectorAll('[datasource="' + dataSourceName  + '"]').forEach(function(elem) {
@@ -198,7 +220,7 @@ wirup.prototype  = function(){
             "name": actionName,
             "element" : actionElement,
             "comment" : comment,
-            "profile" : profile,
+            "profile" : _profile,
             "timestamp" : timestamp
         }
         let _actions = localStorage.getItem("wuActions");
@@ -208,15 +230,16 @@ wirup.prototype  = function(){
     _registerProfile = (profile) => {
         _profile = profile;
     },
-    _renderUI = () => {
-        setTimeout(function () { _getTemplate('contentBody'); }, 1000);
-        setTimeout(function () { _renderViewComponents(); }, 1500);
-    },
     _init = () => {
         _runPreloader();
         _loadScript('components/components.js');
         setTimeout(function () { _registerViews(); }, 500);
-        _renderUI();
+        _registerViews().then(()=>{
+            _getTemplate('contentBody').then(()=>{
+                _renderViewComponents();
+            });
+
+        });
         _watchDataModel();
         _bindRouter();
     };
