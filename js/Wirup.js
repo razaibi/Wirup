@@ -233,7 +233,6 @@ wirup.prototype  = function(){
     _init = () => {
         _runPreloader();
         _loadScript('components/components.js');
-        setTimeout(function () { _registerViews(); }, 500);
         _registerViews().then(()=>{
             _getTemplate('contentBody').then(()=>{
                 _renderViewComponents();
