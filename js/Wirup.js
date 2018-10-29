@@ -22,7 +22,7 @@ wirup.prototype = function() {
                         resolve(callback(httpRequest.responseText));
 
                     } else {
-                        const error = httpRequest.statusText || 'The reason is mysterious. Call Yoda!';
+                        const error = httpRequest.statusText || 'Your ajax request threw an error.';
                         reject(error);
                     }
                 };
@@ -82,14 +82,13 @@ wirup.prototype = function() {
         },
         _renderViewComponents = () => {
             return new Promise(function(resolve, reject) {
-                var _templateComponents = _getElement('contentBody').getElementsByTagName("*");
-                var __viewHTML = '';
-                for (var z = 0; z <= _templateComponents.length - 1; z++) {
-                    __viewHTML += '<' + _templateComponents[z].tagName.toLowerCase() + ' datasource="' + _templateComponents[z].getAttribute('datasource') + '" >';
-                    __viewHTML += _buildComponent(_templateComponents[z].tagName.toLowerCase(), _templateComponents[z].getAttribute('datasource'));
-                    __viewHTML += '</' + _templateComponents[z].tagName.toLowerCase() + '>';
-                }
-                _getElement('contentBody').innerHTML = __viewHTML;
+                var _viewHTML = '';
+                _getElement('contentBody').getElementsByTagName("*").forEach((_component)=>{
+                    _viewHTML += '<' + _component.tagName.toLowerCase() + ' datasource="' + _component.getAttribute('datasource') + '" >';
+                    _viewHTML += _buildComponent(_component.tagName.toLowerCase(), _component.getAttribute('datasource'));
+                    _viewHTML += '</' + _component.tagName.toLowerCase() + '>';
+                });
+                _getElement('contentBody').innerHTML = _viewHTML;
                 _registerAction('Switched View', 'Content Body', 'No Comment.');
                 resolve();
             });
@@ -167,16 +166,6 @@ wirup.prototype = function() {
             } catch (e) {
                 return window[objectName];
             }
-        },
-        _generateUUID = () => {
-            var currentDate = new Date().getTime();
-            currentDate = Date.now();
-            var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                var r = (currentDate + Math.random() * 16) % 16 | 0;
-                currentDate = Math.floor(currentDate / 16);
-                return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-            });
-            return uuid;
         },
         _loadScript = function(scriptPath) {
             var _newScript = document.createElement('script');
