@@ -5,7 +5,7 @@ wirup.prototype = function() {
             return document.getElementById(element_id);
         },
         _wijax = (callType, url, contentType, callback) => {
-            return new Promise(function(resolve, reject) {
+            return new Promise((resolve, reject)=> {
                 var httpRequest = new XMLHttpRequest();
                 httpRequest.open(callType, url, true);
                 httpRequest.setRequestHeader("Content-Type", contentType);
@@ -18,9 +18,7 @@ wirup.prototype = function() {
                         return;
                     }
                     if (httpRequest.status === 200) {
-
                         resolve(callback(httpRequest.responseText));
-
                     } else {
                         const error = httpRequest.statusText || 'Your ajax request threw an error.';
                         reject(error);
@@ -29,7 +27,6 @@ wirup.prototype = function() {
                 httpRequest.send();
                 return httpRequest.responseText;
             });
-
         },
         _appLocation = window.location.hash.split("#")[1],
         _views,
@@ -40,8 +37,8 @@ wirup.prototype = function() {
             _views = JSON.parse(data)['views'];
         },
         _getTemplate = (target) => {
-            return new Promise(function(resolve, reject) {
-                var _index;
+            return new Promise((resolve, reject)=> {
+                let _index;
                 var _url = _appLocation;
                 if (_appLocation === undefined) {
                     window.location = "/#/";
@@ -80,20 +77,21 @@ wirup.prototype = function() {
             _dataStore[dataItemName] = value
         },
         _renderViewComponents = () => {
-            return new Promise(function(resolve, reject) {
+            return new Promise(function (resolve, reject) {
+                var _viewComponents = _getElement('contentBody').getElementsByTagName("*");
                 var _viewHTML = '';
-                _getElement('contentBody').getElementsByTagName("*").forEach((_component)=>{
-                    _viewHTML += '<' + _component.tagName.toLowerCase() + ' datasource="' + _component.getAttribute('datasource') + '" >';
-                    _viewHTML += _buildComponent(_component.tagName.toLowerCase(), _component.getAttribute('datasource'));
+                [].forEach.call(_viewComponents, _component => {
+                    _viewHTML += '<' + _component.tagName.toLowerCase() + ' datasource="' + _component.getAttribute('datasource')  + '" >';
+                    _viewHTML += _buildComponent(_component.tagName.toLowerCase(),_component.getAttribute('datasource'));
                     _viewHTML += '</' + _component.tagName.toLowerCase() + '>';
                 });
                 _getElement('contentBody').innerHTML = _viewHTML;
-                _registerAction('Switched View', 'Content Body', 'No Comment.');
+                _registerAction('Switched View','Content Body','No Comment.');
                 resolve();
             });
         },
         _updateComponentsByDataSourceName = (dataSourceName) => {
-            _getElement('contentBody').querySelectorAll('[datasource="' + dataSourceName + '"]').forEach(function(elem) {
+            _getElement('contentBody').querySelectorAll('[datasource="' + dataSourceName + '"]').forEach((elem)=> {
                 elem.innerHTML = _buildComponent(elem.tagName.toLowerCase(), dataSourceName);
                 _registerAction('Updated Data.', elem.tagName.toLowerCase(), 'No Comment.');
             });
@@ -180,20 +178,16 @@ wirup.prototype = function() {
                 };
             });
         },
-        _runPreloader = function() {
+        _preloaderwidth = 1,
+        _updatePreloader = (completionPercentage)=>{
             var _elem = document.getElementById("progress_bar");
-            var width = 1;
             _elem.parentElement.style.display = 'block';
-            var _updateLoaderInterval = setInterval(_updateLoader, 120);
-            function _updateLoader() {
-                if (width >= 100) {
-                    _elem.parentElement.style.display = 'none';
-                    window.clearInterval(_updateLoaderInterval);
-                } else {
-                    width += 10;
-                    _elem.style.width = width + '%';
-                }
+            if (completionPercentage >= 100) {
+                _elem.parentElement.style.display = 'none';
+            }else{
+                _elem.parentElement.style.display = 'block';
             }
+            _elem.style.width = completionPercentage + '%';
         },
         _profile = '',
         _registerAction = (actionName, actionElement, comment) => {
@@ -213,15 +207,18 @@ wirup.prototype = function() {
             _profile = profile;
         },
         _init = () => {
-            _runPreloader();
             _loadScript('components/components.js').then(()=>{
-                _registerViews().then(() => {
-                    _getTemplate('contentBody').then(() => {
-                        _renderViewComponents();
+                _updatePreloader(25);
+                _registerViews().then(()=>{
+                    _updatePreloader(55);
+                    _getTemplate('contentBody').then(()=>{
+                        _updatePreloader(75);
+                        _renderViewComponents().then(()=>{
+                            _updatePreloader(100);
+                        });
                     });
                 });
             });
-            
             _watchDataModel();
             _bindRouter();
         };
