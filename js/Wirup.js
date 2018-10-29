@@ -222,7 +222,6 @@ wirup.prototype = function() {
             _watchDataModel();
             _bindRouter();
         };
-
     return {
         wu: _getElement,
         wijax: _wijax,
