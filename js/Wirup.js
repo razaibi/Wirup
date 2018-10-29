@@ -56,7 +56,6 @@ wirup.prototype = function() {
                         resolve();
                     });
                 }
-
             });
         },
         _fillView = (index, target) => {
@@ -168,10 +167,18 @@ wirup.prototype = function() {
             }
         },
         _loadScript = function(scriptPath) {
-            var _newScript = document.createElement('script');
-            _newScript.type = 'text/javascript';
-            _newScript.src = scriptPath + '?' + (new Date).getTime();
-            document.getElementsByTagName('head')[0].appendChild(_newScript);
+            return new Promise((resolve, reject)=>{   
+                var _newScript = document.createElement('script');
+                _newScript.type = 'text/javascript';
+                _newScript.src = scriptPath + '?' + (new Date).getTime();
+                document.getElementsByTagName('head')[0].appendChild(_newScript);
+                _newScript.onload = ()=>{ 
+                    resolve();
+                };
+                _newScript.onabort = ()=>{ 
+                    reject();
+                };
+            });
         },
         _runPreloader = function() {
             var _elem = document.getElementById("progress_bar");
@@ -207,13 +214,14 @@ wirup.prototype = function() {
         },
         _init = () => {
             _runPreloader();
-            _loadScript('components/components.js');
-            _registerViews().then(() => {
-                _getTemplate('contentBody').then(() => {
-                    _renderViewComponents();
+            _loadScript('components/components.js').then(()=>{
+                _registerViews().then(() => {
+                    _getTemplate('contentBody').then(() => {
+                        _renderViewComponents();
+                    });
                 });
-
             });
+            
             _watchDataModel();
             _bindRouter();
         };
