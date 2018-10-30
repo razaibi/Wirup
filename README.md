@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Wirup is essentially a nano web UI framework aimed at enabling complex features like **one-way-data-binding**, **routing**, **component portability**, etc. with minimal lines of code. There are more complex and established frameworks facilitating these features (and more). However, they may have steep learning curves or may be heavy in size. Wirup is meant to enable beginners to get up and running quickly.
+Wirup is essentially a nano web UI framework aimed at enabling complex features like **one-way data-binding**, **routing**, **component portability**, etc. with minimal lines of code. There are more complex and established frameworks facilitating these features (and more). However, they may have steep learning curves or may be heavy in size. Wirup is meant to enable beginners to get up and running quickly.
 
 Like most of my other projects, Wirup will remain free (with a MIT license) and open to improvements and criticism all along the way. 
 
@@ -50,7 +50,9 @@ Alternatively you could use arrays to feed your UI.
 ###### Below is an example of how your arrays could look like.
 
 ```js
- wuObject.registerData('cloudServices',['Azure','AWS','Google Cloud']);
+ wuObject.registerData('cloudServices',
+                ['Azure','AWS','Google Cloud']
+);
 ```
 
 ##### Also, you could use a simple object like the one shown below:
@@ -113,10 +115,9 @@ wuObject.registerComponent({
 
 As you may have noticed above, the fields from your data are wired using double dashes -- on either sides of the field name. 
 
-### 4. Setup template(s)
+### 4. Setup views(s)
 
-
-Quickly create a text file that corresponds to the name of the page you want to create. This will contain regular HTML like any other page. Remember **`templates are containers for components`**.
+Quickly create a text file that corresponds to the name of the page you want to create. This will contain regular HTML like any other page. Remember **`views are containers for components`**.
 
 If you do not wish to setup any HTML and use only existing components you can do that like so
 
@@ -124,7 +125,7 @@ If you do not wish to setup any HTML and use only existing components you can do
 <priceBox></priceBox>
 ```
 
-Once you have created the textfile for your template, update the templates.json. **Add you page to the templates array** in the file and define the route on which you wish to seee it. 
+Once you have created the textfile for your view, update the views.json. **Add you page to the views array** in the file and define the route on which you wish to seee it. 
 
 
 ```json
@@ -155,7 +156,7 @@ If you have node installed, simply type from the project directory.
 http-server
 ```
 
-Alternatively you code host your project in any webservers like any server side technologies like **ASP.Net Core, Bottle, Flask.**
+Alternatively you code host your project in any webserver and couple with technologies like **ASP.Net Core, Bottle, Flask** and many more.
 
 ## Features
 
@@ -165,11 +166,11 @@ Wirup aims to keep your UI element(s) in sync with your data. This may be a move
 
 - **Component Portability**
 
-Developers can quickly define small snippets of code as components and use them across the application. Components become condensed into small re-usable tags which can dropped into any templates. Also, their bound-data works right out of the box!!
+Developers can quickly define small snippets of code as components and use them across the application. Components become condensed into small re-usable tags which can dropped into any views. Also, their bound-data works right out of the box!!
 
 - **Easy Routing**
 
-Routing is one of the more complex behavior(s) to control with UI frameworks. Wirup provides a safe **hash-tag based** approach. Just define your routes with the templates and keep moving on.
+Routing is one of the more complex behavior(s) to control with UI frameworks. Wirup provides a safe **hash-tag** based approach. Just define your routes with the templates and keep moving on.
 
 - **Consistent behavior**
 
@@ -185,7 +186,7 @@ Wirup is meant to work with the most commonly used data sources in a structured 
 
 Wirup is built around continuous improvement and imrprovisation. The framework provisions this by providing a data structure to track user interactions. This feature should be solely used to identify bottle necks in the user experience and deliver a quality experience.
 
-Wirup strictly recommend against using these traces to pepper the experience with adware.
+Wirup strictly recommends against using these traces to pepper the experience with adware.
 
 ## Wirup Architecture
 
@@ -203,9 +204,9 @@ Wirup strictly recommend against using these traces to pepper the experience wit
 
 **Bound DOM Nodes**
 
->Once a component is defined and its data source setup, its iterative elements and automatically bound to the data source with `two-way-data-binding`. Any change in the DOM elements done via code or editable content, instantly updates the data source (frontend) and maintains sync. This is setup using MutationObservers. 
+>Once a component is defined and its data source setup, its iterative elements and automatically bound to the data source with `one-way-data-binding`.
 
->Consequently, any changes in the data source object, instantly updates the DOM element. This is done using a `polling` approach where the state of the data source is constantly observed.
+>Any changes in the data source object, instantly updates the DOM component. This is done using a `polling` approach where the state of the data source is constantly observed.
 
 **The wuObject**
 
