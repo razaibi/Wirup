@@ -4,6 +4,8 @@ body {
     margin: 0;
     box-sizing: border-box;
     font-family: Roboto;
+    /*background: linear-gradient(241deg, #0d83c7, #0d83c7, #0d83c7);
+            background-size: 600% 600%;*/
     position: relative;
     background-color: #F6F6F6;
     font-kerning: normal;
@@ -26,33 +28,13 @@ a {
     box-sizing: border-box;
 }
 
-.progress_bar_holder {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    background-color: #ffffff;
-    z-index: 9800;
-    height: 2px;
-    min-height: 2px;
-    display: block;
-    padding:0px;
-}
-.progress_bar {
-    width: 1%;
-    min-height: 2px;
-    background-color: #FFAA00;
-}
-
 .top_bar {
     position: relative;
     width: 100%;
     background-color: #fff;
-    padding-top: 2px;
     height: 55px;
     box-sizing: border-box;
     box-shadow: 0 0 13px #808080;
-    z-index: 9999;
 }
 
 .top_bar_content {
@@ -166,7 +148,6 @@ a {
     margin-left: 25%;
     margin-top: 14px;
     padding: 0;
-    font-family: Arial;
     font-size: 14px;
     color: #808080;
 }
@@ -383,6 +364,7 @@ a {
 
             .hot_menu_list li a:hover {
                 border-bottom: 4px solid #fff;
+                margin-left: 10px;
             }
 
 .hot_menu_closer {
@@ -398,6 +380,12 @@ a {
 
 
 /**Panel block**/
+
+[class*="panel"] {
+    box-shadow:0px 0px 2px #ccc;
+}
+
+
 .panel {
     width: 60%;
     margin-left: 20%;
@@ -407,7 +395,7 @@ a {
     border-radius: 3px;
     background-color: #fff;
     opacity: 1;
-    /*box-shadow:0px 0px 4px #ccc;*/
+    
 }
 
 .panel_compact {
@@ -491,7 +479,7 @@ a {
     /*box-shadow:0px 0px 4px #ccc;*/
 }
 
-.panel_pop {
+.popPanel {
     position: fixed;
     width: 50%;
     left: 25%;
@@ -520,17 +508,16 @@ a {
 }
 
 .calendar_date {
-    font-size: 26px;
+    font-size: 20px;
     color: #808080;
     font-family: 'Arial';
 }
 
 .calendar_box {
-    padding: 30px;
+    padding: 22px;
     text-align: center;
     color: #0D83C7;
-    font-family: 'Arial';
-    font-size: 26px;
+    font-size: 18px;
     border: 1px solid #f1f1f1;
     width: 95%;
     box-sizing: border-box;
@@ -590,13 +577,11 @@ a {
 
     .post_manifest li {
         margin-left: 0;
-        font-family: Arial;
     }
 
         .post_manifest li .post_user {
-            font-family: Arial;
             text-align: left;
-            font-size: 17px;
+            font-size: 14px;
             font-weight: bold;
             width: 80%;
             float: left;
@@ -731,11 +716,10 @@ a {
 .flight_destination {
     width: 40%;
     float: left;
-    font-family: 'Arial';
     border-bottom: 1px solid #00A1DF;
     padding: 5px;
     box-sizing: border-box;
-    font-size: 24px;
+    font-size: 18px;
     color: #00A1DF;
 }
 
@@ -750,9 +734,11 @@ a {
 }
 
 .flight_class {
-    width: 90%;
+    width: 100%;
     padding: 5px;
     float: left;
+    text-align: center;
+    font-weight: bold;
 }
 
 .flight_airport {
@@ -827,14 +813,12 @@ a {
 }
 
 .premium_class {
-    font-family: 'Arial';
-    font-size: 18px;
+    font-size: 15px;
     color: #034A97;
 }
 
 .coach_class {
-    font-family: 'Arial';
-    font-size: 18px;
+    font-size: 15px;
     color: #0D83C7;
 }
 /**End**/
@@ -842,7 +826,7 @@ a {
 /**Weather block**/
 .weather_city {
     color: #00A1DF;
-    font-size: 25px;
+    font-size: 16px;
     float: left;
     padding: 0;
 }
@@ -858,20 +842,19 @@ a {
 
 .weather_type {
     color: #00A1DF;
-    font-size: 22px;
+    font-size: 16px;
     padding-top: 10px;
 }
 
 .weather_temperature {
     color: #034A97;
-    font-size: 30px;
+    font-size: 26px;
     font-weight: bold;
 }
 
 .weather_label {
     color: #808080;
-    font-size: 16px;
-    font-family: Calibri;
+    font-size: 13px;
     font-weight: bold;
     float: left;
     width: 100%;
@@ -881,9 +864,10 @@ a {
 /**Banner Board**/
 .banner {
     width: 100%;
-    height: 400px;
+    height: 350px;
     background: linear-gradient(241deg, #0d83c7, #0d83c7, #0d83c7);
     background-size: 600% 600%;
+    border-radius: 2px;
 }
 
 .banner_title {
@@ -900,7 +884,7 @@ a {
 
 .banner_phrase {
     float: left;
-    font-size: 43px;
+    font-size: 28px;
     width: 100%;
 }
 /**End**/
@@ -913,7 +897,7 @@ a {
 }
 
 h2 {
-    font-size: 28px;
+    font-size: 24px;
     padding: 5px;
 }
 
@@ -922,7 +906,6 @@ button {
     border: none;
     padding: 10px;
     cursor: pointer;
-    font-family: 'Arial';
     font-weight: normal;
     border-radius: 3px;
 }
@@ -1038,7 +1021,6 @@ button {
 }
 
 .light_title {
-    font-family: 'Arial';
     color: #034A97;
     background-color: #fff;
 }
@@ -1084,13 +1066,12 @@ label {
 
 .search_control_high {
     height: 65px;
-    font-size: 26px;
-    font-family: Calibri;
+    font-size: 21px;
     font-weight: normal;
 }
 
 .search_control_spcl {
-    font-size: 28px;
+    font-size: 21px;
     color: #0D83C7;
 }
 
@@ -1104,7 +1085,7 @@ label {
     border: none;
     height: 20px;
     color: #034A97;
-    font-size: 14px;
+    font-size: 12px;
     padding: 5px;
     background-color: #F7F8F9;
     border: 1px solid #ccc;
@@ -1165,9 +1146,8 @@ label {
         }
 
 .result_title {
-    font-family: 'Arial';
     color: #034A97;
-    font-size: 20px;
+    font-size: 17px;
 }
 
 .result_cap {
@@ -1190,10 +1170,10 @@ label {
     box-sizing: border-box;
     list-style-type: none;
     width: 100%;
-    font-family: Arial;
     color: #808080;
     min-height: 30px;
     border-bottom: 1px solid #f1f1f1;
+    padding-bottom: 10px;
 }
 
 .tab_header_active {
@@ -1257,6 +1237,7 @@ label {
 /**Paragraph block**/
 p {
     margin: 0;
+    font-size:12px;
 }
 
 .para {
@@ -1355,7 +1336,7 @@ p {
 }
 
 
-@media handheld, only screen and (max-width: 1024px) {
+@media handheld, only screen and (max-width: 1200px) {
 
     .top_bar_content {
         width: 100%;
@@ -1430,7 +1411,7 @@ p {
         margin-left: 7.5%;
     }
 
-    .panel_pop {
+    .popPanel {
         left: 12.5%;
         width: 75%;
     }
@@ -1465,8 +1446,8 @@ p {
     }
 
     .panel_search_vertical {
-        width: 100%;
-        margin-left: 0;
+        width: 90%;
+        margin-left: 5%;
         box-sizing: border-box;
     }
 
@@ -1475,9 +1456,10 @@ p {
         margin-left: 5%;
     }
 
-    .panel_pop {
-        left: 7.5%;
-        width: 85%;
+    .popPanel {
+        left:0;
+        margin-left: 3%;
+        width: 88%;
     }
 
     .search_control {
@@ -1487,7 +1469,7 @@ p {
 
     .row {
         margin-left: 0;
-        padding: 0;
+        padding: 5px;
     }
 
     [class*="wing_span_"] {
@@ -1495,7 +1477,11 @@ p {
     }
 
     .wing_span_1 {
-        width: 100%;
+        width: 33%;
+    }
+
+    .wing_span_1_3_4{
+        width: 25%;
     }
 
     .wing_span_2 {
@@ -1542,14 +1528,45 @@ p {
         width: 100%;
     }
 
+
+    .wing_span_1_3_4{
+        width: 33%;
+    }
+
     .calendar_box {
-        font-size: 15px;
-        padding: 14px;
+        font-size: 13px;
+        padding: 4px;
         box-sizing: border-box;
+        min-height: 40px;
     }
 
     .calender_price {
         font-size: 12px;
+    }
+
+    .flight_time{
+        font-size: 20px;
+    }
+
+    .flight_day{
+        font-size:14px;
+    }
+
+    .panel_compact_pax_last{
+        border:1px solid #f1f1f1;
+    }
+
+    .panel_compact_pax_middle{
+        border:1px solid #f1f1f1;
+    }
+
+    .panel_compact_pax_first{
+        border:1px solid #f1f1f1;
+    }
+
+    .search_control{
+        margin-top: 20px;
+        height: 36px;
     }
 }
 
@@ -1569,6 +1586,23 @@ p {
 
     .hot_menu_closer {
         font-size: 18px;
+    }
+
+    [class*="panel"] {
+        margin-top:40px;
+        margin-left:3%;
+        width:94%;
+    }
+
+    .panel_flight{
+        margin-top:40px;
+        margin-left:3%;
+        width:94%;
+    }
+
+    .tab_header{
+        padding: 0px;
+        padding-bottom: 10px;
     }
 }
 
@@ -1592,15 +1626,7 @@ p {
         display: none;
     }
 
-    .panel_flight {
-        width: 100%;
-        margin-left: 0;
-    }
-
-    .panel_pop {
-        left: 2%;
-        width: 90%;
-    }
+    
 
 
     .calendar_box {
