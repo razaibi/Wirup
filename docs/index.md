@@ -204,7 +204,7 @@ Wirup strictly recommends against using these traces to pepper the experience wi
 
 **Bound DOM Nodes**
 
->Once a component is defined and its data source setup, its iterative elements and automatically bound to the data source with `one-way-data-binding`.
+>Once a component is defined and its data source setup, it's iterative elements and automatically bound to the data source with `one-way-data-binding`.
 
 >Any changes in the data source object, instantly updates the DOM component. This is done using a `polling` approach where the state of the data source is constantly observed.
 
@@ -218,12 +218,4 @@ Wirup.js file exposes a global object wuObject which can be used by the applicat
 
 Wirup is intentionally developed in a way that caters to modern applications. In setups, where all of the heavy lifting is done by REST based services and UI is only intended for rendering, Wirup is ideal.
 
-
 ## Happy Coding!!
-
-
-
-Changes:
-Data Registeration updated
-Component Registration Updated.
-Support for Analytics

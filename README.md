@@ -218,12 +218,4 @@ Wirup.js file exposes a global object wuObject which can be used by the applicat
 
 Wirup is intentionally developed in a way that caters to modern applications. In setups, where all of the heavy lifting is done by REST based services and UI is only intended for rendering, Wirup is ideal.
 
-
 ## Happy Coding!!
-
-
-
-Changes:
-Data Registeration updated
-Component Registration Updated.
-Support for Analytics
