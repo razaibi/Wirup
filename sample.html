@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wirup</title>
-    <link rel="stylesheet" href="css/main.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="css/main.css" asp-append-version="true" />
 </head>
 
 <body>
@@ -13,78 +13,26 @@
                 <div class="progress_bar" id="progress_bar"></div>
     </div>
     <div class="content_holder" id="contentHeader">
-        <div class="top_bar">
-            <div class="top_bar_content">
-                <div class="top_bar_logo_holder top_bar_side centralize">
-                    <img src="img/aero_logo.png" class="top_bar_logo" /> </div>
-                <div class="top_bar_search_box_holder top_bar_side centralize">
-                    <input type="text" placeholder="What are you looking for?" class="search_box" /> </div>
-                <div class="top_bar_notif_holder top_bar_side centralize">
-                    <label for="gen_notif">
-                        <img src="img/notification_sm.png" class="top_bar_icon" />
-                    </label>
-                    <input type="checkbox" id="gen_notif" role="button">
-                    <div class="gen_notif">
-                        <ul class="notif_holder glide_left">
-                            <li>
-                                <p class="notif_desc">Check Notifications</p>
-                            </li>
-                            <li>
-                                <p class="notif_desc">You've got mail</p>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="top_bar_notif_holder top_bar_side centralize">
-                    <label for="message_notif">
-                        <img src="img/message_sm.png" class="top_bar_icon" />
-                    </label>
-                    <input type="checkbox" id="message_notif" role="button">
-                    <div class="message_notif">
-                        <ul class="notif_holder glide_left">
-                            <li>
-                                <p class="notif_title">Sunita Williams</p>
-                                <p class="notif_time">Today</p>
-                                <p class="notif_desc">Hi from space</p>
-                            </li>
-                            <li>
-                                <p class="notif_title">Petkov</p>
-                                <p class="notif_time">Yesterday</p>
-                                <p class="notif_desc">Hello from the moon</p>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="top_bar_notif_holder top_bar_side centralize">
-                    <img src="img/user.png" class="top_bar_icon" /> </div>
-            </div>
-        </div>
+        
         <div class="menu_bar">
             <label for="menu_link" class="menu_link">
                 <img src="img/list_menu.png" />
             </label>
             <input type="checkbox" id="menu_link" role="button">
             <ul class="menu_holder">
-                <li> Home
+                <li> examples
                     <div class="menu_li_content">
-                        <a href="#/newsPage">Validation</a>
+                        <a href="#/">popular people</a>
+                        <a href="#/rockets">top rockets</a>
+                        <a href="#/prices">price card</a>
                     </div>
                 </li>
-                <li> sample
-                    <div class="menu_li_content">
-                        <a href="">sub item 01</a>
-                        <a href="">sub item 02</a>
-                    </div>
-                </li>
-                <li onclick="open_hot_menu('hot_menu_list');">
-                    <span class="special">hot menu</span>
-                </li>
+                
             </ul>
         </div>
     </div>
 
     <div class="content_holder" id="contentBody">
-        
 
     </div>
 
@@ -94,16 +42,26 @@
 <script type="text/javascript">
 
 
-    var computers = '{"computers":[{"id":5,"name":"Amazon","city":"Chicago","state":"IL","url":"https://basecamp.com/"},{"id":17,"name":"Google","city":"Mountain View","state":"CA","url":"http://google.com/"}]}';
-    var cars = '{"cars": [{"name": "Ford","models": ["Fiesta", "Focus", "Mustang"],"price": 56},{"name": "BMW","models": ["320", "X3", "X5"],"price": 44},{"name": "Fiat","models": ["500", "Panda"], "price": 33}]}';
+   wuObject.registerData('popularNames',[
+                { index: 1, initial: 'A', lastname : 'Vespucci', fullname : 'Amerigo Vespucci' },
+                { index :2, initial: 'B', lastname : 'Franklyn', fullname : 'Benjamin Franklyn' }
+    ]);
 
-    var news = '{"news":[{"id":5,"headline":"XYZ Changes Law","content":"One more law revision."},{"id":17,"headline":"Mars Rover Landed","content":"Huge step for mankind"}]}';
-    
-    var arrayList = ["Azure",'AWS','Google Cloud'];
 
-    var headLineData = {
-        "content":"Wirup is easy!!"
-    }
+    wuObject.registerData('rockets',['(The Legendary) Saturn V', 'Delta IV Heavy','Falcon Heavy','Delta IV', 'Ariane 4', 'Atlas V']);
+
+    wuObject.registerData('price',[{
+        adultFare : 1110.00,
+        childFare : 861.00 
+    }]);
+
+
+    /*Want to see magic?
+    Open console and type the following:
+    wuObject.dataStore['price'][0]['adultFare']=900;
+
+    */
+
 
     wuObject.init();
 
