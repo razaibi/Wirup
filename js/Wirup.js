@@ -78,14 +78,10 @@ wirup.prototype = function() {
         },
         _renderViewComponents = () => {
             return new Promise(function (resolve, reject) {
-                var _viewComponents = _getElement('contentBody').getElementsByTagName("*");
-                var _viewHTML = '';
+                var _viewComponents = _getElement('contentBody').querySelectorAll('[datasource]');
                 [].forEach.call(_viewComponents, _component => {
-                    _viewHTML += '<' + _component.tagName.toLowerCase() + ' datasource="' + _component.getAttribute('datasource')  + '" >';
-                    _viewHTML += _buildComponent(_component.tagName.toLowerCase(),_component.getAttribute('datasource'));
-                    _viewHTML += '</' + _component.tagName.toLowerCase() + '>';
+                    _component.innerHTML = _buildComponent(_component.tagName.toLowerCase(),_component.getAttribute('datasource'));
                 });
-                _getElement('contentBody').innerHTML = _viewHTML;
                 _registerAction('Switched View','Content Body','No Comment.');
                 resolve();
             });
