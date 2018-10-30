@@ -1,3 +1,0 @@
-<samplebox datasource="items"></samplebox>
-
-<linkbox datasource="links"></linkbox>

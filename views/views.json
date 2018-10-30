@@ -1,19 +1,19 @@
 {
     "views": [
         {
-            "viewName": "mainPage",
+            "viewName": "listView",
             "url": "/",
-            "HTML": "mainPage.txt"
+            "HTML": "listView.txt"
         },
         {
-            "viewName": "newsPage",
-            "url": "/newsPage",
-            "HTML": "newPage.txt"
+            "viewName": "rocketsView",
+            "url": "/rockets",
+            "HTML": "rocketsView.txt"
         },
         {
-            "viewName": "circlesPage",
-            "url": "/circles",
-            "HTML": "circlesPage.txt"
+            "viewName": "priceView",
+            "url": "/prices",
+            "HTML": "priceView.txt"
         }
     ]
 }
