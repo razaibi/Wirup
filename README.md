@@ -4,7 +4,7 @@
 
 Wirup is essentially a nano web UI framework aimed at enabling complex features like **one-way data-binding**, **routing**, **component portability**, etc. with minimal lines of code. There are more complex and established frameworks facilitating these features (and more). However, they may have steep learning curves or may be heavy. Wirup is meant to enable beginners to get up and running quickly.
 
-Like most of my other projects, Wirup will remain free (with a MIT license) and open to improvements and criticism all along the way. 
+Wirup will remain free (with a MIT license) and open to improvements and criticism all along the way. 
 
 ## Quick Start in 9 Mins
 
@@ -20,7 +20,7 @@ Like most of my other projects, Wirup will remain free (with a MIT license) and 
 components
 --components.js
 css
---main.css
+--main.min.css
 -sample.html
 ```
 
@@ -75,13 +75,17 @@ wuObject.registerData('price',[{
 
 ### 3. Create Component(s)
 
-Goto the components folder in your project and create a component. This is like giving a wireframe to your component. You can use simple HTML to do so.
+Goto `components/components.js` file. Register your component(s) like the given examples.
+
+This is like giving a wireframe to your component. You can use simple HTML and JS to do so. 
+
+Wirup has evolved to incorporate **template literals** as they have become a natural part of JS and the web. 
+
+Make sure **HTML for the component is enclosed in ticks and not single quotes**.
 
 ##### JSON Array as data source 
 
-Wirup has evolved to incorporate template literals as they have become a natural part of JS and the web. 
-
-Make sure **HTML for the component is enclosed in ticks and not single quotes**.
+Below is an example of registering a component that will eventually use a JSON array as a data source.
 
 ```js
 wuObject.registerComponent('listbox', (item) => {
@@ -97,11 +101,15 @@ wuObject.registerComponent('listbox', (item) => {
 });
 ```
 
-The 'item' argument can be renamed to suit your naming scheme. However, make sure the argument name is used in the component template accordingly.
+`Notice that you do not require explcitly mentioning the data source while registering a component. It is only during usage in your views you setup your data source.` 
+
+**`This de-coupling makes it easier to switch data sources for a component at runtime.`**
+
+The 'item' argument can be renamed to suit your naming scheme. However, make sure the argument name is used inside the anonymous function.
 
 ##### Regular JS Array as data source 
 
-Alternatively, you could use an **array as the data source** for your component. Below is an example of a component using an array.
+Alternatively, you can setup a component to use **array as a data source**. Below is an example of a component using an array.
 
 ```js
 wuObject.registerComponent('rocketbox', (item) => {return `
@@ -114,19 +122,13 @@ wuObject.registerComponent('rocketbox', (item) => {return `
 
 Another way of wiring up would be to use an object. If you have a number of independent variables, this approach is handy. 
 
-`The only caveat is that if you have html elements or components using the data source(s), make sure the data source is registered before rendering the components.`
+`The only caveat is that if you have html elements or components using data source(s), make sure the data source is registered before rendering the components.`
 
 ### 4. Setup views(s)
 
 Quickly create a text file that corresponds to the name of the page you want to create. This will contain regular HTML like any other page. Remember **`views are containers for components`**.
 
-If you do not wish to set up any HTML and use only existing components you can do that like so
-
-```html
-<priceBox></priceBox>
-```
-
-Once you have created the textfile for your view, update the views.json. **Add your page to the views array** in the file and define the route on which you wish to see it. 
+Once you have created the textfile for your view (in the **views** folder), update the views.json. **Add your page to the views array** in the file and define the route on which you wish to see it. 
 
 
 ```json
@@ -140,6 +142,14 @@ Once you have created the textfile for your view, update the views.json. **Add y
     ]
 }
 ```
+
+If you do not wish to set up any HTML and use only existing components you can do as shown below
+
+```html
+<listbox datasource="popularNames"></listbox>
+```
+
+
 
 ### 5. Wait! Are we done already? 
 
@@ -175,7 +185,7 @@ Developers can quickly define small snippets of code as components and use them 
 
 ![Image](https://raw.githubusercontent.com/razaibi/Wirup/master/projectArtwork/WirupRoutingSupport.png)
 
-Routing is one of the more complex behavior(s) to control with UI frameworks. Wirup provides a safe **hash-tag** based approach. Just define your routes with the templates and keep moving on.
+Routing is one of the more complex behavior(s) to control with UI frameworks. Wirup provides a safe **hash-tag** based approach. Just define your routes with the views and keep moving on.
 
 - **Consistent behavior**
 
@@ -195,6 +205,12 @@ Data is fed to views from a central data source. This does away with the need to
 
 Wirup is built around continuous improvement and improvisation. The framework provisions this by providing a data structure to track user interactions. This feature should be solely used to identify bottlenecks in the user experience and deliver a quality experience.
 
+Use the below code sample to track user interactions in different points in the application.
+
+```js
+wuObject.registerAction('Action Name','Point of Action','Comment(s)');
+```
+
 Wirup strictly recommends against using these traces to pepper the experience with adware.
 
 ## Wirup Architecture
@@ -211,7 +227,7 @@ Wirup strictly recommends against using these traces to pepper the experience wi
 
 ![Image](https://raw.githubusercontent.com/razaibi/Wirup/master/projectArtwork/WirupPortableComponents.png)
 
->Components are individual interface elements which can be wired up with data and used across templates. Seamless component re-usability across views (or pages) is one of the key features of Wirup.
+>Components are individual interface elements which can be wired up with data and used across views. Seamless component re-usability across views (or pages) is one of the key features of Wirup.
 
 **Bound DOM Nodes**
 
@@ -230,3 +246,6 @@ Wirup.js file exposes a global object wuObject which can be used by the applicat
 Wirup is intentionally developed in a way that caters to modern applications. In setups, where all the heavy lifting is done by REST based services and UI is only intended for rendering, Wirup is ideal.
 
 ## Happy Coding!!
+
+
+### Check out [*WirupExpress*](https://github.com/razaibi/WirupExpress) : the ultra lightweight version of Wirup.
