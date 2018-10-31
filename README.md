@@ -87,11 +87,11 @@ Make sure **HTML for the component is enclosed in ticks and not single quotes**.
 wuObject.registerComponent('listbox', (item) => {
         return `
         <li>
-            <p>
-                <span class="result_no">${item.index}</span>  <span class="result_title"><span class="result_cap">   
+         <p>
+         <span class="result_no">${item.index}</span>  <span class="result_title"><span class="result_cap">   
                 ${item.initial}</span>${item.lastname}</span>
-            </p>
-            <p class="result_desc">${item.fullname}</p>
+         </p>
+         <p class="result_desc">${item.fullname}</p>
         </li>
         `          
 });
