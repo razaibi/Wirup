@@ -163,7 +163,7 @@ Alternatively you code host your project in any web server and couple with techn
 
 - **One-Way-Data-Binding**
 
-![Image](https://raw.githubusercontent.com/razaibi/Wirup/master/projectArtwork/WirupDataBinding.png)
+![Image](https://raw.githubusercontent.com/razaibi/Wirup/master/projectArtwork/WirupDataBind.png)
 
 Wirup aims to keep your UI element(s) in sync with your data. This may be a move away from the initial approach to accommodate two-way binding. This is a conscious decision to minimize overhead in the framework and keeping it lightweight. 
 
