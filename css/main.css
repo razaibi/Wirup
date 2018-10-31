@@ -28,10 +28,29 @@ a {
     box-sizing: border-box;
 }
 
+.progress_bar_holder {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background-color: transparent;
+    z-index: 9800;
+    height: 3px;
+    min-height: 3px;
+    display: block;
+    padding:0px;
+}
+.progress_bar {
+    width: 1%;
+    min-height: 3px;
+    background-color: #FFAA00;
+}
+
+
 .top_bar {
     position: relative;
     width: 100%;
-    background-color: #fff;
+    background-color: #ffffff;
     height: 55px;
     box-sizing: border-box;
     box-shadow: 0 0 13px #808080;
