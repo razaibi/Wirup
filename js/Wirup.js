@@ -74,7 +74,38 @@ wirup.prototype = function() {
             _components[componentName] = template
         },
         _registerData = (dataItemName, value) => {
-            _dataStore[dataItemName] = value
+            Object.defineProperty(_dataStore, dataItemName, {     
+                get: function() { return this['_' + dataItemName] },     
+                set: function(newValue) { 
+                    var _currentVal = this['_' + dataItemName];
+                    this['_' + dataItemName] = newValue;
+                    _updateComponentsByDataSourceName(dataItemName);
+                } 
+            });
+            _dataStore[dataItemName] = value;
+        },
+        _addData = (dataItemName, newData) => {
+            var _tempArray = [];
+            _tempArray = _dataStore[dataItemName];
+            _tempArray.push(newData);
+            _dataStore[dataItemName] = _tempArray;
+            _tempArray = [];
+        },
+        _updateData = (dataItemName, position, newData) => {
+            var _tempArray = [];
+            _tempArray = _dataStore[dataItemName];
+            position = ((position-1)<0) ? 0 : position-1;
+            _tempArray[position]= newData;
+            _dataStore[dataItemName] = _tempArray;
+            _tempArray = [];
+        },
+        _removeData = (dataSourceName, position) => {
+            var _tempArray = [];
+            _tempArray = _dataStore[dataSourceName];
+            position = ((position-1)<0) ? 0 : position-1;
+            _tempArray.splice((position),1);
+            _dataStore[dataSourceName] = _tempArray;
+            _tempArray = [];
         },
         _renderViewComponents = () => {
             return new Promise(function (resolve, reject) {
@@ -91,6 +122,7 @@ wirup.prototype = function() {
                 elem.innerHTML = _buildComponent(elem.tagName.toLowerCase(), dataSourceName);
                 _registerAction('Updated Data.', elem.tagName.toLowerCase(), 'No Comment.');
             });
+            
         },
         _buildComponent = (componentName, datasourceName) => {
             let output = '';
@@ -123,28 +155,6 @@ wirup.prototype = function() {
                 }
             });
             return output.join("");
-        },
-        _getObjectType = function(dataObject) {
-            if (Array.isArray(dataObject)) {
-                return "array"
-            } else {
-                return typeof(dataObject);
-            }
-        },
-        _watchDataModel = function() {
-            var _dataSnapShotList = {}
-            setInterval(function() {
-                for (var key in _dataStore) {
-                    var stringified = JSON.stringify(window['wuObject']['dataStore'][key]);
-                    if (typeof _dataSnapShotList[key] == 'undefined') {
-                        _dataSnapShotList[key] = stringified;
-                    }
-                    if (_dataSnapShotList[key] != stringified) {
-                        _dataSnapShotList[key] = stringified;
-                        _updateComponentsByDataSourceName(key);
-                    }
-                }
-            }, 3500);
         },
         _get_keys = function(obj) {
             for (var k in obj) {
@@ -215,7 +225,6 @@ wirup.prototype = function() {
                     });
                 });
             });
-            _watchDataModel();
             _bindRouter();
         };
     return {
@@ -229,6 +238,9 @@ wirup.prototype = function() {
         buildComponent: _buildComponent,
         buildComponents: _buildComponents,
         registerData: _registerData,
+        addData:_addData,
+        updateData : _updateData,
+        removeData : _removeData,
         dataStore: _dataStore,
         components: _components,
         init: _init
