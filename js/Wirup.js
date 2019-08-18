@@ -40,7 +40,7 @@ wirup.prototype = function() {
             return new Promise((resolve, reject)=> {
                 let _index;
                 var _url = _appLocation;
-                if (_appLocation === undefined) {
+                if (_appLocation === undefined || _appLocation == '/') {
                     window.location = "/#/";
                 }
                 if (_views) {
@@ -49,6 +49,8 @@ wirup.prototype = function() {
                             _index = i;
                         }
                     }
+
+                    if(_index === undefined){ _index = 0};
                     _fillView(_index, target).then(() => {
                         resolve();
                     });
