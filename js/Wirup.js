@@ -72,6 +72,7 @@ wirup.prototype = function() {
         },
         _dataStore = {},
         _components = {},
+        _loadObserver = {},
         _registerComponent = (componentName, template) => {
             _components[componentName] = template
         },
@@ -85,6 +86,17 @@ wirup.prototype = function() {
                 } 
             });
             _dataStore[dataItemName] = value;
+        },
+        _onLoad = (value) => {
+            Object.defineProperty(_loadObserver, 'trigger', {     
+                get: function() { return this['_trigger']},     
+                set: function(newValue) { 
+                    var _currentVal = this['_trigger'];
+                    this['_trigger'] = newValue;
+                    window[newValue]();
+                } 
+            });
+            _loadObserver['trigger'] = value;
         },
         _addData = (dataItemName, newData) => {
             var _tempArray = [];
@@ -124,7 +136,6 @@ wirup.prototype = function() {
                 elem.innerHTML = _buildComponent(elem.tagName.toLowerCase(), dataSourceName);
                 _registerAction('Updated Data.', elem.tagName.toLowerCase(), 'No Comment.');
             });
-            
         },
         _buildComponent = (componentName, datasourceName) => {
             let output = '';
@@ -186,17 +197,6 @@ wirup.prototype = function() {
                 };
             });
         },
-        _preloaderwidth = 1,
-        _updatePreloader = (completionPercentage)=>{
-            var _elem = document.getElementById("progress_bar");
-            _elem.parentElement.style.display = 'block';
-            if (completionPercentage >= 100) {
-                _elem.parentElement.style.display = 'none';
-            }else{
-                _elem.parentElement.style.display = 'block';
-            }
-            _elem.style.width = completionPercentage + '%';
-        },
         _profile = '',
         _registerAction = (actionName, actionElement, comment) => {
             let date = new Date();
@@ -215,19 +215,21 @@ wirup.prototype = function() {
             _profile = profile;
         },
         _init = () => {
-            _loadScript('components/components.js').then(()=>{
-                _updatePreloader(25);
-                _registerViews().then(()=>{
-                    _updatePreloader(55);
-                    _getTemplate('contentBody').then(()=>{
-                        _updatePreloader(75);
-                        _renderViewComponents().then(()=>{
-                            _updatePreloader(100);
+            return new Promise(function (resolve, reject) {
+                _loadScript('components/components.js').then(()=>{
+                    _registerViews().then(()=>{
+                        _getTemplate('contentBody').then(()=>{
+                            _renderViewComponents().then(()=>{
+                                
+                            });
                         });
                     });
                 });
+                _bindRouter();
+                resolve();
+
+
             });
-            _bindRouter();
         };
     return {
         wu: _getElement,
@@ -244,6 +246,7 @@ wirup.prototype = function() {
         updateData : _updateData,
         removeData : _removeData,
         dataStore: _dataStore,
+        onLoad: _onLoad,
         components: _components,
         init: _init
     };
