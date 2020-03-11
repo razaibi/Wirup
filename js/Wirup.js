@@ -105,6 +105,12 @@ wirup.prototype = function() {
             _dataStore[dataItemName] = _tempArray;
             _tempArray = [];
         },
+        _findIndexByKey = (dataSourceName, keyName, keyValue) => {
+            var index = wuObject.dataStore[dataSourceName].findIndex(function(dataItem) {
+                return dataItem[keyName] == keyValue;
+            });
+            return index;
+        },
         _updateData = (dataItemName, position, newData) => {
             var _tempArray = [];
             _tempArray = _dataStore[dataItemName];
@@ -243,6 +249,7 @@ wirup.prototype = function() {
         buildComponents: _buildComponents,
         registerData: _registerData,
         addData:_addData,
+        findIndexByKey : _findIndexByKey,
         updateData : _updateData,
         removeData : _removeData,
         dataStore: _dataStore,
