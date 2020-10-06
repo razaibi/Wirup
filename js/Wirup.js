@@ -267,7 +267,9 @@ wirup.prototype = (function () {
             _getTemplate("contentBody").then(() => {
               _renderViewComponents().then(() => {
                 _bindRouter();
-                _onContentLoad(functionName);
+                if (typeof functionName !== "undefined") {
+                  _onContentLoad(functionName);
+                }
               });
             });
           });
