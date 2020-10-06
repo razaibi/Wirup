@@ -55,17 +55,26 @@
         childFare : 861.00 
     }]);
 
-
     /*Want to see magic?
     Open console and type the following:
     wuObject.dataStore['price'][0]['adultFare']=900;
-
     */
 
-
     wuObject.init();
+    //If you would like to invoke a function
+    //after Wirup Initializes
+    //replace the above call with this:
+    //wuObject.init(yourOwnCustomFunction);
+    // Also uncomment the below lines.
 
-
+    /*
+    function yourOwnCustomFunction(){
+        //Build what you like here!!
+        //Feel free to rename this function.
+        //Ideally this should be used as an entry point
+        //for other functions/ calls.
+    }
+    */
 
 
 </script>
