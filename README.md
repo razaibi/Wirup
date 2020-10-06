@@ -165,8 +165,10 @@ wuObject.init();
 You could invoke a custom function once Wirup completes intialization. Use the below code to do the same.
 
 ```js
-wuObject.init(yourOwnCustomFunction);
+wuObject.init('yourOwnCustomFunction');
 ```
+
+`Note that the custom function name is passed as a string here.`
 
 If you choose to invoke your custom function, make sure to define it.
 
