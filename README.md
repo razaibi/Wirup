@@ -33,6 +33,8 @@ views
 index.html
 ```
 
+`Rename sample.html from this repo and use as `**index.html**`.`
+
 
 ### 2. Bring in your data
 Wirup now uses the concept of a centralized data store to aggregate all data source. Adding your data can simply done in the format showed below.
@@ -159,6 +161,22 @@ Do not forget to get everything `wired up` with one simple command in any Javasc
 wuObject.init();
 ```
 
+## Or
+You could invoke a custom function once Wirup completes intialization. Use the below code to do the same.
+
+```js
+wuObject.init(yourOwnCustomFunction);
+```
+
+If you choose to invoke your custom function, make sure to define it.
+
+
+```js
+function yourOwnCustomFunction(){
+    //Build what you like here!!
+}
+```
+
 #### Now, we are ready! ####
 
 If you have node installed, simply type from the project directory. 
@@ -246,6 +264,3 @@ Wirup.js file exposes a global object wuObject which can be used by the applicat
 Wirup is intentionally developed in a way that caters to modern applications. In setups, where all the heavy lifting is done by REST based services and UI is only intended for rendering, Wirup is ideal.
 
 ## Happy Coding!!
-
-
-### Check out [*WirupExpress*](https://github.com/razaibi/WirupExpress) : the ultra lightweight version of Wirup.
