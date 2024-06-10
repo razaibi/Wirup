@@ -1,3 +1,0 @@
-<div class="panel_flight top_space_md">
-    <pricebox datasource="price"></pricebox>                
-</div>

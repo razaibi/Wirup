@@ -3,17 +3,17 @@
         {
             "viewName": "listView",
             "url": "/",
-            "HTML": "listView.txt"
+            "HTML": "listView.html"
         },
         {
             "viewName": "rocketsView",
             "url": "/rockets",
-            "HTML": "rocketsView.txt"
+            "HTML": "rocketsView.html"
         },
         {
             "viewName": "priceView",
             "url": "/prices",
-            "HTML": "priceView.txt"
+            "HTML": "priceView.html"
         }
     ]
 }
