@@ -189,6 +189,14 @@ http-server
 
 Alternatively you code host your project in any web server and couple with technologies like **ASP.Net Core, Bottle, Flask** and many more.
 
+## Quick Fun Trick
+
+With the given sample app in the **example** folder, launch the app and open the console on your favorite browser and type this:
+
+```
+wuObject.updateData('price',0,{"adultFare" : 2000, "childFare": 300});
+```
+
 ## Features
 
 - **One-Way-Data-Binding**

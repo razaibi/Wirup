@@ -57,7 +57,13 @@
 
     /*Want to see magic?
     Open console and type the following:
-    wuObject.dataStore['price'][0]['adultFare']=900;
+    wuObject.updateData('price',0,{"adultFare" : 2000, "childFare": 300});
+    
+    Alternatively, do a partial update:
+    wuObject.updateData('price',0,{"adultFare" : 2300, "childFare": wuObject.dataStore.price[0]['childFare']});
+    
+    Or simply add data:
+    wuObject.addData('price',{"adultFare" : 2600, "childFare": 600});
     */
 
     wuObject.init();
