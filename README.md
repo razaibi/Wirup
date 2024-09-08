@@ -213,7 +213,19 @@ Developers can quickly define small snippets of code as components and use them 
 
 ![Image](https://raw.githubusercontent.com/razaibi/Wirup/master/projectArtwork/WirupRoutingSupport.png)
 
-Routing is one of the more complex behavior(s) to control with UI frameworks. Wirup provides a safe **hash-tag** based approach. Just define your routes with the views and keep moving on.
+Routing is one of the more complex behavior(s) to control with UI frameworks. Wirup now supports a **non-hash-tag** based approach. Just define your routes with the views and keep moving on. Make sure to setup a base route like below in the views.json.
+
+```json
+{
+    "views": [
+        {
+            "viewName": "sampleView",
+            "url": "/",
+            "HTML": "sampleView.html"
+        }
+    ]
+}
+```
 
 - **Consistent behavior**
 
