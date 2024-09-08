@@ -42,7 +42,7 @@ Wirup now uses the concept of a centralized data store to aggregate all data sou
 ###### Below is an example of how JSON data should be structured.
 
 ```js
-wuObject.registerData('popularNames',[
+wu.registerData('popularNames',[
                 { index: 1, initial: 'A', lastname : 'Vespucci', fullname : 'Amerigo Vespucci' },
                 { index :2, initial: 'B', lastname : 'Franklyn', fullname : 'Benjamin Franklyn' }
 ]);
@@ -53,7 +53,7 @@ Alternatively you could use arrays to feed your UI.
 ###### Below is an example of how your arrays could look like.
 
 ```js
- wuObject.registerData('rockets',
+ wu.registerData('rockets',
   [
    '(The Legendary) Saturn V', 
    'Delta IV Heavy',
@@ -69,7 +69,7 @@ Alternatively you could use arrays to feed your UI.
 ##### Also, you could use a simple object like the one shown below:
 
 ```js
-wuObject.registerData('price',[{
+wu.registerData('price',[{
    adultFare : 1110.00,
    childFare : 861.00 
 }]);
@@ -90,7 +90,7 @@ Make sure **HTML for the component is enclosed in ticks and not single quotes**.
 Below is an example of registering a component that will eventually use a JSON array as a data source.
 
 ```js
-wuObject.registerComponent('listbox', (item) => {
+wu.registerComponent('listbox', (item) => {
         return `
         <li>
          <p>
@@ -114,7 +114,7 @@ The 'item' argument can be renamed to suit your naming scheme. However, make sur
 Alternatively, you can setup a component to use **array as a data source**. Below is an example of a component using an array.
 
 ```js
-wuObject.registerComponent('rocketbox', (item) => {return `
+wu.registerComponent('rocketbox', (item) => {return `
         <li>
         <p class="network_title">${item}</p>
         </li>`            
@@ -158,14 +158,14 @@ If you do not wish to set up any HTML and use only existing components you can d
 Do not forget to get everything `wired up` with one simple command in any Javascript block on your page.
 
 ```js
-wuObject.init();
+wu.init();
 ```
 
 ## Or
 You could invoke a custom function once Wirup completes intialization. Use the below code to do the same.
 
 ```js
-wuObject.init('yourOwnCustomFunction');
+wu.init('yourOwnCustomFunction');
 ```
 
 `Note that the custom function name is passed as a string here.`
@@ -194,7 +194,7 @@ Alternatively you code host your project in any web server and couple with techn
 With the given sample app in the **example** folder, launch the app and open the console on your favorite browser and type this:
 
 ```
-wuObject.updateData('price',0,{"adultFare" : 2000, "childFare": 300});
+wu.updateData('price',0,{"adultFare" : 2000, "childFare": 300});
 ```
 
 ## Features
@@ -248,7 +248,7 @@ Wirup is built around continuous improvement and improvisation. The framework pr
 Use the below code sample to track user interactions in different points in the application.
 
 ```js
-wuObject.registerAction('Action Name','Point of Action','Comment(s)');
+wu.registerAction('Action Name','Point of Action','Comment(s)');
 ```
 
 Wirup strictly recommends against using these traces to pepper the experience with adware.
@@ -275,9 +275,9 @@ Wirup strictly recommends against using these traces to pepper the experience wi
 
 >Any changes in the data source object, instantly updates the DOM component. This is done using a `polling` approach where the state of the data source is constantly observed.
 
-**The wuObject**
+## The **wu** Object
 
-Wirup.js file exposes a global object wuObject which can be used by the application. They key reason this is done to do away with `initialization` process.
+Wirup.js file exposes a global object **wu** which can be used by the application. They key reason this is done to do away with `initialization` process.
 
 ## Suggested Application Architecture
 

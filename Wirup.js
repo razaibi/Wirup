@@ -285,7 +285,7 @@ wirup.prototype = (function () {
       _renderAll(functionName);
     };
   return {
-    wu: _getElement,
+    wx: _getElement,
     wijax: _wijax,
     jsonize: _jsonize,
     loadScript: _loadScript,
@@ -306,4 +306,4 @@ wirup.prototype = (function () {
     init: _init,
   };
 })();
-window.wuObject = new wirup();
+window.wu = new wirup();

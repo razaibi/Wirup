@@ -43,35 +43,35 @@
 <script type="text/javascript">
 
 
-   wuObject.registerData('popularNames',[
+   wu.registerData('popularNames',[
                 { index: 1, initial: 'A', lastname : 'Vespucci', fullname : 'Amerigo Vespucci' },
                 { index :2, initial: 'B', lastname : 'Franklyn', fullname : 'Benjamin Franklyn' }
     ]);
 
 
-    wuObject.registerData('rockets',['(The Legendary) Saturn V', 'Delta IV Heavy','Falcon Heavy','Delta IV', 'Ariane 4', 'Atlas V']);
+    wu.registerData('rockets',['(The Legendary) Saturn V', 'Delta IV Heavy','Falcon Heavy','Delta IV', 'Ariane 4', 'Atlas V']);
 
-    wuObject.registerData('price',[{
+    wu.registerData('price',[{
         adultFare : 1110.00,
         childFare : 861.00 
     }]);
 
     /*Want to see magic?
     Open console and type the following:
-    wuObject.updateData('price',0,{"adultFare" : 2000, "childFare": 300});
+    wu.updateData('price',0,{"adultFare" : 2000, "childFare": 300});
     
     Alternatively, do a partial update:
-    wuObject.updateData('price',0,{"adultFare" : 2300, "childFare": wuObject.dataStore.price[0]['childFare']});
+    wu.updateData('price',0,{"adultFare" : 2300, "childFare": wu.dataStore.price[0]['childFare']});
     
     Or simply add data:
-    wuObject.addData('price',{"adultFare" : 2600, "childFare": 600});
+    wu.addData('price',{"adultFare" : 2600, "childFare": 600});
     */
 
-    wuObject.init();
+    wu.init();
     //If you would like to invoke a function
     //after Wirup Initializes
     //replace the above call with this:
-    //wuObject.init('yourOwnCustomFunction');
+    //wu.init('yourOwnCustomFunction');
     // Also uncomment the below lines.
 
     /*
@@ -84,18 +84,15 @@
     */
 
     document.getElementById('peopleLink').addEventListener("click", function(){
-        wuObject.navigateTo('/');
+        wu.navigateTo('/');
     });
 
     document.getElementById('rocketLink').addEventListener("click", function(){
-        wuObject.navigateTo('/rockets');
+        wu.navigateTo('/rockets');
     });
 
     document.getElementById('priceLink').addEventListener("click", function(){
-        wuObject.navigateTo('/prices');
+        wu.navigateTo('/prices');
     });
-
-
 </script>
-
 </html>
