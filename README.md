@@ -139,7 +139,7 @@ Once you have created the textfile for your view (in the **views** folder), upda
         {
             "viewName": "listView",
             "url": "/",
-            "HTML": "listView.txt"
+            "viewFile": "listView.html"
         }
     ]
 }

@@ -68,7 +68,7 @@ wirup.prototype = (function () {
     _fillView = (index, target) => {
       return _wijax(
         "GET",
-        "views/" + _views[index]["HTML"],
+        "views/" + _views[index]["viewFile"],
         "text/plain; charset=UTF-8",
         (data) => {
           _getElement(target).innerHTML = data;
