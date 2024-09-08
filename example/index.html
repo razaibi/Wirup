@@ -22,9 +22,9 @@
             <ul class="menu_holder">
                 <li> examples
                     <div class="menu_li_content">
-                        <a href="#/">popular people</a>
-                        <a href="#/rockets">top rockets</a>
-                        <a href="#/prices">price card</a>
+                        <a id="peopleLink">popular people</a>
+                        <a id="rocketLink">top rockets</a>
+                        <a id="priceLink">price card</a>
                     </div>
                 </li>
                 
@@ -81,6 +81,18 @@
         //for other functions/ calls.
     }
     */
+
+    document.getElementById('peopleLink').addEventListener("click", function(){
+        wuObject.navigateTo('/');
+    });
+
+    document.getElementById('rocketLink').addEventListener("click", function(){
+        wuObject.navigateTo('/rockets');
+    });
+
+    document.getElementById('priceLink').addEventListener("click", function(){
+        wuObject.navigateTo('/prices');
+    });
 
 
 </script>

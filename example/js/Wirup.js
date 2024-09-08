@@ -29,7 +29,7 @@ wirup.prototype = (function () {
         return httpRequest.responseText;
       });
     },
-    _appLocation = window.location.hash.split("#")[1],
+    _appLocation = window.location.pathname,
     _views,
     _registerViews = () => {
       return _wijax(
@@ -46,8 +46,8 @@ wirup.prototype = (function () {
       return new Promise((resolve, reject) => {
         let _index;
         var _url = _appLocation;
-        if (_appLocation === undefined || _appLocation == "/") {
-          window.location = "/#/";
+        if (_appLocation === undefined) {
+          window.location = "/";
         }
         if (_views) {
           for (var i = 0; i <= _views.length - 1; i++) {
@@ -76,12 +76,17 @@ wirup.prototype = (function () {
       );
     },
     _bindRouter = () => {
-      window.onhashchange = function () {
-        if (window.location.hash != _appLocation) {
-          _appLocation = window.location.hash.split("#")[1];
-          _init();
-        }
+      window.onpopstate = (event) => {
+        _appLocation = window.location.pathname; // Handle back/forward button
+        _init();
       };
+    },
+    _navigateTo = (url) => {
+      history.pushState(null, null, url); // Update URL without reloading
+      _appLocation = url; // Update internal app location
+      _getTemplate("contentBody").then(() => {
+        _renderViewComponents();
+      });
     },
     _dataStore = {},
     _components = {},
@@ -289,6 +294,7 @@ wirup.prototype = (function () {
     registerAction: _registerAction,
     buildComponent: _buildComponent,
     buildComponents: _buildComponents,
+    navigateTo: _navigateTo,
     registerData: _registerData,
     addData: _addData,
     findIndexByKey: _findIndexByKey,
