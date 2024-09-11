@@ -65,16 +65,31 @@ wirup.prototype = (function () {
         }
       });
     },
-    _fillView = (index, target) => {
-      return _wijax(
-        "GET",
-        "views/" + _views[index]["viewFile"],
-        "text/plain; charset=UTF-8",
-        (data) => {
-          _getElement(target).innerHTML = data;
-        }
-      );
-    },
+    _fillView = function (index, targetElementId) {
+      var htmlFilePath = "views/" + _views[index]["viewFile"];
+      return new Promise((resolve, reject) => {
+        fetch(htmlFilePath + "?" + new Date().getTime())
+          .then((response) => {
+            if (response.ok) {
+              return response.text();
+            } else {
+              reject(`Failed to load HTML view: ${htmlFilePath}`);
+            }
+          })
+          .then((htmlContent) => {
+            var targetElement = _getElement(targetElementId);
+            if (targetElement) {
+              targetElement.innerHTML = htmlContent;
+              resolve(); // Resolve the promise if the HTML content is successfully injected
+            } else {
+              reject(`Target element with ID "${targetElementId}" not found`);
+            }
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },    
     _bindRouter = () => {
       window.onpopstate = (event) => {
         _appLocation = window.location.pathname; // Handle back/forward button
@@ -242,6 +257,31 @@ wirup.prototype = (function () {
         };
       });
     },
+    _loadScriptsFromFolder = function (folderPath, scriptNames) {
+      return new Promise((resolve, reject) => {
+        let promises = scriptNames.map((scriptName) => {
+          return new Promise((resolveScript, rejectScript) => {
+            var _newScript = document.createElement("script");
+            _newScript.type = "text/javascript";
+            _newScript.src = folderPath + "/" + scriptName + "?" + new Date().getTime();
+            document.getElementsByTagName("head")[0].appendChild(_newScript);
+            _newScript.onload = () => {
+              resolveScript();
+            };
+            _newScript.onerror = () => {
+              rejectScript(`Failed to load ${scriptName}`);
+            };
+          });
+        });
+        Promise.all(promises)
+          .then(() => {
+            resolve();
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },    
     _profile = "",
     _registerAction = (actionName, actionElement, comment) => {
       let date = new Date();
@@ -265,15 +305,24 @@ wirup.prototype = (function () {
     _onContentLoad = (functionName) => {
       return window[functionName]();
     },
-    _renderAll = (functionName) => {
+    _renderAll = (config) => {
       return new Promise(function (resolve, reject) {
-        _loadScript("components/components.js").then(() => {
+        var componentsFiles = [ 'components.js' ];
+        if (config?.components 
+          && 
+          Array.isArray(config.components) 
+          &&
+          config.components.length > 0
+        ){
+          componentsFiles = config.components
+        };
+        _loadScriptsFromFolder('components', componentsFiles).then(() => {
           _registerViews().then(() => {
             _getTemplate("contentBody").then(() => {
               _renderViewComponents().then(() => {
                 _bindRouter();
-                if (typeof functionName !== "undefined") {
-                  _onContentLoad(functionName);
+                if (typeof config.callbackName !== "undefined") {
+                  _onContentLoad(config.callbackName);
                 }
               });
             });
@@ -281,8 +330,8 @@ wirup.prototype = (function () {
         });
       });
     },
-    _init = (functionName) => {
-      _renderAll(functionName);
+    _init = (config) => {
+      _renderAll(config);
     };
   return {
     wx: _getElement,
