@@ -71,7 +71,7 @@
     //If you would like to invoke a function
     //after Wirup Initializes
     //replace the above call with this:
-    //wu.init('yourOwnCustomFunction');
+    //wu.init({ 'callbackName':'yourOwnCustomFunction'});
     // Also uncomment the below lines.
 
     /*
@@ -82,6 +82,14 @@
         //for other functions/ calls.
     }
     */
+
+    // For multiple component files, use below pattern.
+    //wu.init({
+    //    'components': [
+    //        'components2.js',
+    //        'components.js'
+    //    ]
+    //});
 
     document.getElementById('peopleLink').addEventListener("click", function(){
         wu.navigateTo('/');
