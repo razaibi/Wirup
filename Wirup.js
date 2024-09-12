@@ -177,7 +177,7 @@ wirup.prototype = (function () {
             _component.getAttribute("datasource")
           );
         });
-        _registerAction("Switched View", "Content Body", "No Comment.");
+        _registerAction("Switched View", "CBody", "NA");
         resolve();
       });
     },
