@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wirup</title>
+    <title>Wirup Example</title>
     <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="css/main.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/razaibi/Wirup/example/css/main.min.css" />
 </head>
 
 <body>
@@ -17,11 +17,12 @@
         
         <div class="menu_bar">
             <label for="menu_link" class="menu_link">
-                <img src="img/list_menu.png" />
+                Menu
             </label>
             <input type="checkbox" id="menu_link" role="button">
             <ul class="menu_holder">
-                <li> examples
+                <li><a href="http://github.com/razaibi/wirup" target="_blank">Wirup</a></li>
+                <li>Navigate To
                     <div class="menu_li_content">
                         <a id="peopleLink">popular people</a>
                         <a id="rocketLink">top rockets</a>
@@ -37,9 +38,10 @@
 
     </div>
 
+    <h5>Powered by <a href="https://github.com/razaibi/wirup" target="_blank">Wirup</a></h5>
 
 </body>
-<script type="text/javascript" src="js/Wirup.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/razaibi/wirup/Wirup.js"></script>
 <script type="text/javascript">
 
 
@@ -67,10 +69,26 @@
     wu.addData('price',{"adultFare" : 2600, "childFare": 600});
     */
 
-    wu.init();
-    //If you would like to invoke a function
-    //after Wirup Initializes
-    //replace the above call with this:
+    // If you have a single file called components.js
+    // in your components folder, you can simply 
+    // use the below command to initiate Wirup.
+    //wu.init();
+
+    // For the default setup in this example
+    // multiple component groups have been setup.
+    // Below code will initiate with
+    // multiple files.
+
+    wu.init({
+       'components': [
+           'componentGroupOne.js',
+           'componentGroupTwo.js'
+       ]
+    });
+
+    // If you would like to invoke a function
+    // after Wirup Initializes
+    // replace the above call with this:
     //wu.init({ 'callbackName':'yourOwnCustomFunction'});
     // Also uncomment the below lines.
 
@@ -83,13 +101,6 @@
     }
     */
 
-    // For multiple component files, use below pattern.
-    //wu.init({
-    //    'components': [
-    //        'components2.js',
-    //        'components.js'
-    //    ]
-    //});
 
     document.getElementById('peopleLink').addEventListener("click", function(){
         wu.navigateTo('/');
@@ -104,3 +115,4 @@
     });
 </script>
 </html>
+    
