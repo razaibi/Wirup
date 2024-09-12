@@ -172,10 +172,7 @@ a {
 }
 
     .menu_holder li {
-        float: left;
-        margin: 0;
-        padding-bottom: 11px;
-        margin-right: 20px;
+        position: relative;
     }
 
         .menu_holder li:hover {
@@ -192,15 +189,17 @@ a {
             color: #FFAA00;
         }
 
+
+
 .menu_li_content {
-    display: none;
-    position: absolute;
-    margin-top: 15px;
+    display: none; /* Keep hidden by default */
+    position: absolute; /* Ensure the dropdown is positioned relative to the parent */
+    left: 0; /* Align to the left edge of the parent */
+    margin-top: 10px;
     background-color: #f9f9f9;
     min-width: 150px;
     text-align: center;
     padding: 10px;
-    box-shadow: 0 8px 16px 0 #000000;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     z-index: 250;
 }
