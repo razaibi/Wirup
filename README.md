@@ -6,7 +6,32 @@ Wirup is essentially a nano web UI framework aimed at enabling complex features 
 
 Wirup will remain free (with a MIT license) and open to improvements and criticism all along the way. 
 
-## Quick Start in 9 Mins
+## Quick Start in 2 Mins
+
+Simply navigate to [create-wirup-app on NPM](https://www.npmjs.com/package/create-wirup-app) and install the tool "create-wirup-app".
+
+```bash
+npm i create-wirup-app
+```
+
+Once installed, you can simply create a sample application with create-wirup-app.
+
+```bash
+create-wirup-app sampleapp
+```
+
+Navigate to the folder of the new app and run it.
+
+```bash
+cd sampleapp
+http-server
+```
+
+That is it! 
+
+Below is a more detailed break down of creating a similar app from scratch.
+
+## Start in 9 Mins
 
 ![Image](https://raw.githubusercontent.com/razaibi/Wirup/master/projectArtwork/WirupQuickSetup.png)
 
