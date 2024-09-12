@@ -215,6 +215,9 @@ a {
 
         .menu_li_content a:hover {
             background-color: #fff;
+            color: #006DF0;
+            cursor: pointer;
+            border-bottom: 3px solid #FFAA00;
         }
 
 #menu_link:checked ~ .menu_holder {
