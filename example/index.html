@@ -2,60 +2,82 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wirup Example</title>
-    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/razaibi/Wirup/example/css/main.min.css" />
+    <title>Wirup - Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="Spectre.css CSS Framework is a lightweight, responsive and modern CSS framework for faster and extensible development. Spectre provides basic styles for typography and elements, flexbox based responsive layout system, pure CSS components and utilities with best practice coding and consistent design language.">
+    <link rel="stylesheet" href="css/spectre.css">
+    <link rel="stylesheet" href="css/spectre-exp.css">
+    <link rel="stylesheet" href="css/spectre-icons.css">
+    <link rel="stylesheet" href="css/custom.css">
 </head>
 
 <body>
-    <div class="progress_bar_holder">
-                <div class="progress_bar" id="progress_bar"></div>
-    </div>
-    <div class="content_holder" id="contentHeader">
-        
-        <div class="menu_bar">
-            <label for="menu_link" class="menu_link">
-                Menu
-            </label>
-            <input type="checkbox" id="menu_link" role="button">
-            <ul class="menu_holder">
-                <li><a href="http://github.com/razaibi/wirup" target="_blank">Wirup</a></li>
-                <li>Navigate To
-                    <div class="menu_li_content">
-                        <a id="peopleLink">popular people</a>
-                        <a id="rocketLink">top rockets</a>
-                        <a id="priceLink">price card</a>
-                    </div>
-                </li>
-                
-            </ul>
+    <header class="navbar custom-nav">
+        <section class="navbar-section">
+            <a href="https://www.github.com/razaibi/wirup" class="btn btn-link dropdown-toggle" tabindex="0" target="_blank">
+                <img src="img/wu.png" class="logo-img" />
+            </a>
+            <!-- Dropdown Menu -->
+            <div class="dropdown">
+                <a class="btn btn-link dropdown-toggle" tabindex="0">
+                    Go To <i class="icon icon-caret"></i>
+                </a>
+                <!-- Dropdown menu links -->
+                <ul class="menu">
+                    <li class="menu-item">
+                        <a id="peopleLink">Popular</a>
+                    </li>
+                    <li class="menu-item">
+                        <a id="rocketLink">Rockets</a>
+                    </li>
+                    <li class="menu-item">
+                        <a id="priceLink">Prices</a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+
+    </header>
+    <div class="content mt-10">
+
+        <!-- Adjusted Main Content -->
+        <div class="container" id="contentBody">
+           
         </div>
     </div>
 
-    <div class="content_holder" id="contentBody">
 
+    <div class="columns mt-8">
+        <div class="column col-3"></div>
+        <div class="column col-6 col-gapless text-center">
+            <div class="text-tiny">Powered by <a href="https://github.com/razaibi/wirup" target="_blank">Wirup</a></div>
+        </div>
+        <div class="column col-3">
+        </div>
     </div>
 
-    <h5>Powered by <a href="https://github.com/razaibi/wirup" target="_blank">Wirup</a></h5>
+    
 
+    
 </body>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/razaibi/wirup/Wirup.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/razaibi/wirup@master/Wirup.js"></script>
 <script type="text/javascript">
 
 
-   wu.registerData('popularNames',[
-                { index: 1, initial: 'A', lastname : 'Vespucci', fullname : 'Amerigo Vespucci' },
-                { index :2, initial: 'B', lastname : 'Franklyn', fullname : 'Benjamin Franklyn' }
+    wu.registerData('popularNames', [
+        { index: 1, initial: 'A', lastname: 'Vespucci', fullname: 'Amerigo Vespucci' },
+        { index: 2, initial: 'B', lastname: 'Franklyn', fullname: 'Benjamin Franklyn' }
     ]);
 
 
-    wu.registerData('rockets',['(The Legendary) Saturn V', 'Delta IV Heavy','Falcon Heavy','Delta IV', 'Ariane 4', 'Atlas V']);
+    wu.registerData('rockets', ['(The Legendary) Saturn V', 'Delta IV Heavy', 'Falcon Heavy', 'Delta IV', 'Ariane 4', 'Atlas V']);
 
-    wu.registerData('price',[{
-        adultFare : 1110.00,
-        childFare : 861.00 
+    wu.registerData('price', [{
+        adultFare: 1110.00,
+        childFare: 861.00
     }]);
 
     /*Want to see magic?
@@ -80,10 +102,10 @@
     // multiple files.
 
     wu.init({
-       'components': [
-           'componentGroupOne.js',
-           'componentGroupTwo.js'
-       ]
+        'components': [
+            'componentGroupOne.js',
+            'componentGroupTwo.js'
+        ]
     });
 
     // If you would like to invoke a function
@@ -102,17 +124,17 @@
     */
 
 
-    document.getElementById('peopleLink').addEventListener("click", function(){
+    document.getElementById('peopleLink').addEventListener("click", function () {
         wu.navigateTo('/');
     });
 
-    document.getElementById('rocketLink').addEventListener("click", function(){
+    document.getElementById('rocketLink').addEventListener("click", function () {
         wu.navigateTo('/rockets');
     });
 
-    document.getElementById('priceLink').addEventListener("click", function(){
+    document.getElementById('priceLink').addEventListener("click", function () {
         wu.navigateTo('/prices');
     });
 </script>
+
 </html>
-    
