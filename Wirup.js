@@ -6,7 +6,7 @@ wirup.prototype = (function () {
     },
     _wijax = (callType, url, contentType, callback) => {
       return new Promise((resolve, reject) => {
-        var httpRequest = new XMLHttpRequest();
+        const httpRequest = new XMLHttpRequest();
         httpRequest.open(callType, url, true);
         httpRequest.setRequestHeader("Content-Type", contentType);
         httpRequest.setRequestHeader("cache-control", "no-cache");
@@ -26,7 +26,6 @@ wirup.prototype = (function () {
           }
         };
         httpRequest.send();
-        return httpRequest.responseText;
       });
     },
     _appLocation = window.location.pathname,
@@ -45,30 +44,48 @@ wirup.prototype = (function () {
     _getTemplate = (target) => {
       return new Promise((resolve, reject) => {
         let _index;
-        var _url = _appLocation;
-        if (_appLocation === undefined) {
-          window.location = "/";
-        }
-        if (_views) {
-          for (var i = 0; i <= _views.length - 1; i++) {
-            if (_views[i]["url"] == _url) {
-              _index = i;
-            }
-          }
 
-          if (_index === undefined) {
-            _index = 0;
-          }
-          _fillView(_index, target).then(() => {
-            resolve();
-          });
+        // Fallback mechanism: if _appLocation is not defined, default to root "/"
+        const _url = _appLocation || "/";
+
+        // Handle edge cases where _views might be undefined or empty
+        if (!_views || _views.length === 0) {
+          reject("Views are undefined or empty, cannot load template.");
+          return;
         }
+
+        // Find the index of the view matching the current URL (_appLocation)
+        for (let i = 0; i < _views.length; i++) {
+          if (_views[i]["url"] === _url) {
+            _index = i;
+            break;
+          }
+        }
+
+        // Handle the case where the URL does not match any view
+        if (_index === undefined) {
+          console.warn(
+            `No view found for the URL: ${_url}. Redirecting to default view.`
+          );
+          _index = 0; // You can redirect to a "Not Found" page or the default page.
+        }
+
+        // Fill the view with the found index
+        _fillView(_index, target)
+          .then(() => resolve())
+          .catch((error) => {
+            console.error(`Error filling view for URL ${_url}: ${error}`);
+            reject(`Failed to fill view for ${_url}`);
+          });
+      }).catch((error) => {
+        console.error(`Error in _getTemplate: ${error}`);
+        console.error("View may not have been defined.");
       });
     },
     _fillView = function (index, targetElementId) {
-      var htmlFilePath = "views/" + _views[index]["viewFile"];
+      const htmlFilePath = "views/" + _views[index]["viewFile"];
       return new Promise((resolve, reject) => {
-        fetch(htmlFilePath + "?" + new Date().getTime())
+        fetch(htmlFilePath + "?")
           .then((response) => {
             if (response.ok) {
               return response.text();
@@ -77,7 +94,7 @@ wirup.prototype = (function () {
             }
           })
           .then((htmlContent) => {
-            var targetElement = _getElement(targetElementId);
+            const targetElement = _getElement(targetElementId);
             if (targetElement) {
               targetElement.innerHTML = htmlContent;
               resolve(); // Resolve the promise if the HTML content is successfully injected
@@ -89,7 +106,7 @@ wirup.prototype = (function () {
             reject(error);
           });
       });
-    },    
+    },
     _bindRouter = () => {
       window.onpopstate = (event) => {
         _appLocation = window.location.pathname; // Handle back/forward button
@@ -128,7 +145,7 @@ wirup.prototype = (function () {
           return this["_trigger"];
         },
         set: function (newValue) {
-          var _currentVal = this["_trigger"];
+          let _currentVal = this["_trigger"];
           this["_trigger"] = newValue;
           window[newValue]();
         },
@@ -136,22 +153,25 @@ wirup.prototype = (function () {
       _loadObserver["trigger"] = value;
     },
     _addData = (dataItemName, newData) => {
-      var _tempArray = [];
+      let _tempArray = [];
       _tempArray = _dataStore[dataItemName];
       _tempArray.push(newData);
       _dataStore[dataItemName] = _tempArray;
       _tempArray = [];
     },
-    _findIndexByKey = (dataSourceName, keyName, keyValue) => {
-      var index = wuObject.dataStore[dataSourceName].findIndex(function (
-        dataItem
-      ) {
-        return dataItem[keyName] == keyValue;
+    _findIndexByKey = function (dataSourceName, keyName, keyValue) {
+      if (!this.dataStore[dataSourceName]) {
+        throw new Error(
+          `Data source '${dataSourceName}' not found in dataStore`
+        );
+      }
+      const index = this.dataStore[dataSourceName].findIndex((dataItem) => {
+        return dataItem[keyName] === keyValue;
       });
       return index;
     },
     _updateData = (dataItemName, position, newData) => {
-      var _tempArray = [];
+      let _tempArray = [];
       _tempArray = _dataStore[dataItemName];
       position = position - 1 < 0 ? 0 : position - 1;
       _tempArray[position] = newData;
@@ -159,7 +179,7 @@ wirup.prototype = (function () {
       _tempArray = [];
     },
     _removeData = (dataSourceName, position) => {
-      var _tempArray = [];
+      let _tempArray = [];
       _tempArray = _dataStore[dataSourceName];
       position = position - 1 < 0 ? 0 : position - 1;
       _tempArray.splice(position, 1);
@@ -168,9 +188,8 @@ wirup.prototype = (function () {
     },
     _renderViewComponents = () => {
       return new Promise(function (resolve, reject) {
-        var _viewComponents = _getElement("contentBody").querySelectorAll(
-          "[datasource]"
-        );
+        let _viewComponents =
+          _getElement("contentBody").querySelectorAll("[datasource]");
         [].forEach.call(_viewComponents, (_component) => {
           _component.innerHTML = _buildComponent(
             _component.tagName.toLowerCase(),
@@ -197,44 +216,63 @@ wirup.prototype = (function () {
         });
     },
     _buildComponent = (componentName, datasourceName) => {
-      let output = "";
-      var dataSourceType = typeof _dataStore[datasourceName];
+      let output = [];
+      const dataSource = _dataStore[datasourceName];
+      const dataSourceType = typeof dataSource;
+
       switch (dataSourceType) {
         case "object":
-          output = _dataStore[datasourceName].map((item, i) => {
-            return _components[componentName](item);
-          });
-          break;
-        case "string":
-          output = _components[componentName](_dataStore[datasourceName]);
-          break;
-      }
-      return output.join("");
-    },
-    _buildComponents = (componentNames, datasourceNames) => {
-      let output = "";
-      componentNames.forEach((componentName, index) => {
-        dataSourceType = typeof _dataStore[datasourceNames[index]];
-        switch (dataSourceType) {
-          case "object":
-            output = _dataStore[datasourceNames[index]].map((item, i) => {
+          if (Array.isArray(dataSource)) {
+            // Handle the case where it's an array
+            output = dataSource.map((item) => {
               return _components[componentName](item);
             });
+          } else {
+            // Handle the case where it's an object (non-array)
+            output.push(_components[componentName](dataSource));
+          }
+          break;
+
+        case "string":
+          // Handle the case where it's a string
+          output.push(_components[componentName](dataSource));
+          break;
+
+        default:
+          throw new Error(`Unsupported data type: ${dataSourceType}`);
+      }
+
+      // If output is an array, join it. Otherwise, return it directly.
+      return Array.isArray(output) ? output.join("") : output;
+    },
+    _buildComponents = (componentNames, datasourceNames) => {
+      let output = [];
+
+      componentNames.forEach((componentName, index) => {
+        const dataSource = _dataStore[datasourceNames[index]];
+        const dataSourceType = typeof dataSource;
+
+        switch (dataSourceType) {
+          case "object":
+            if (Array.isArray(dataSource)) {
+              output = output.concat(
+                dataSource.map((item) => _components[componentName](item))
+              );
+            } else {
+              output.push(_components[componentName](dataSource));
+            }
             break;
           case "string":
-            output = _components[componentName](
-              _dataStore[datasourceNames[index]]
-            );
+            output.push(_components[componentName](dataSource));
             break;
+
+          default:
+            throw new Error(`Unsupported data type: ${dataSourceType}`);
         }
       });
-      return output.join("");
-    },
-    _get_keys = function (obj) {
-      for (var k in obj) {
-        if (typeof obj[k] == "object" && obj[k] !== null) _get_keys(obj[k]);
-        _key_list.push(obj[k]);
-      }
+
+      // Return joined output if it's an array
+      return Array.isArray(output) ? output.join("") : output;
     },
     _jsonize = function (objectName) {
       try {
@@ -245,9 +283,9 @@ wirup.prototype = (function () {
     },
     _loadScript = function (scriptPath) {
       return new Promise((resolve, reject) => {
-        var _newScript = document.createElement("script");
+        let _newScript = document.createElement("script");
         _newScript.type = "text/javascript";
-        _newScript.src = scriptPath + "?" + new Date().getTime();
+        _newScript.src = scriptPath;
         document.getElementsByTagName("head")[0].appendChild(_newScript);
         _newScript.onload = () => {
           resolve();
@@ -257,31 +295,31 @@ wirup.prototype = (function () {
         };
       });
     },
-    _loadScriptsFromFolder = function (folderPath, scriptNames) {
+    _loadScriptsFromFolder = (folderPath, scriptNames) => {
       return new Promise((resolve, reject) => {
-        let promises = scriptNames.map((scriptName) => {
+        const promises = scriptNames.map((scriptName) => {
           return new Promise((resolveScript, rejectScript) => {
-            var _newScript = document.createElement("script");
+            const _newScript = document.createElement("script");
             _newScript.type = "text/javascript";
-            _newScript.src = folderPath + "/" + scriptName + "?" + new Date().getTime();
+            _newScript.src = `${folderPath}/${scriptName}`;
             document.getElementsByTagName("head")[0].appendChild(_newScript);
-            _newScript.onload = () => {
-              resolveScript();
-            };
-            _newScript.onerror = () => {
-              rejectScript(`Failed to load ${scriptName}`);
-            };
+
+            _newScript.onload = () => resolveScript();
+            _newScript.onerror = () =>
+              rejectScript(`Failed to load script: ${scriptName}`);
           });
         });
+
         Promise.all(promises)
-          .then(() => {
-            resolve();
-          })
+          .then(resolve)
           .catch((err) => {
+            console.error(`Error loading scripts from folder: ${err}`);
             reject(err);
           });
+      }).catch((error) => {
+        console.error(`Error in _loadScriptsFromFolder: ${error}`);
       });
-    },    
+    },
     _profile = "",
     _registerAction = (actionName, actionElement, comment) => {
       let date = new Date();
@@ -307,16 +345,15 @@ wirup.prototype = (function () {
     },
     _renderAll = (config) => {
       return new Promise(function (resolve, reject) {
-        var componentsFiles = [ 'components.js' ];
-        if (config?.components 
-          && 
-          Array.isArray(config.components) 
-          &&
+        let componentsFiles = ["components.js"];
+        if (
+          config?.components &&
+          Array.isArray(config.components) &&
           config.components.length > 0
-        ){
-          componentsFiles = config.components
-        };
-        _loadScriptsFromFolder('components', componentsFiles).then(() => {
+        ) {
+          componentsFiles = config.components;
+        }
+        _loadScriptsFromFolder("components", componentsFiles).then(() => {
           _registerViews().then(() => {
             _getTemplate("contentBody").then(() => {
               _renderViewComponents().then(() => {
